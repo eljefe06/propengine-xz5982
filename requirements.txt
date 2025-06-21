@@ -1,0 +1,6 @@
+streamlit
+rapidfuzz
+pandas
+requests
+scipy
+pybaseball
