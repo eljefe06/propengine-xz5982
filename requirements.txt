@@ -1,7 +1,9 @@
 streamlit
 rapidfuzz
-pandas
 requests
 scipy
 pybaseball
 openpyxl
+streamlit
+pandas
+plotly
