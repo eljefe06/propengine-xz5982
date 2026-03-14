@@ -4,6 +4,13 @@
       "type": "http",
       "url": "http://localhost:3100/mcp"
     },
+    "nano-banana-2": {
+      "command": "npx",
+      "args": ["-y", "@easyuseai/nano-banana-pro-mcp"],
+      "env": {
+        "GEMINI_API_KEY": "AIzaSyBBf_NxI_KUX4sWEGQfg62z3Om6x8e3zhc"
+      }
+    },
     "21st-dev-magic": {
       "command": "npx",
       "args": ["-y", "@21st-dev/magic@latest"],
