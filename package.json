@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "penpot-mcp": "bash penpot-mcp-server.sh"
+  },
+  "dependencies": {
+    "@zcubekr/penpot-mcp-server": "^1.0.0"
+  }
+}

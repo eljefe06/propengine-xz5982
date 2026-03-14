@@ -6,6 +6,10 @@
       "env": {
         "STITCH_USE_SYSTEM_GCLOUD": "1"
       }
+    },
+    "penpot": {
+      "type": "http",
+      "url": "http://localhost:3100/mcp"
     }
   }
 }
