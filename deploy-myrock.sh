@@ -1,77 +1,84 @@
 #!/usr/bin/env bash
 set -e
 
-REPO="https://github.com/eljefe06/propengine-xz5982"
 BRANCH="claude/install-google-stitch-mcp-zt9ob"
-WEBROOT="/var/www/myrock"
-NGINX_CONF="/etc/nginx/sites-available/myrock"
-
-echo "==> Desplegando MyRock en $WEBROOT"
-
-mkdir -p "$WEBROOT"
-
 RAW="https://raw.githubusercontent.com/eljefe06/propengine-xz5982/$BRANCH"
 
-echo "    Descargando index.html..."
-curl -fsSL "$RAW/myrock/index.html" -o "$WEBROOT/index.html"
+# ── 1. Detectar webroot de Apache ────────────────────────────────
+echo "==> Detectando webroot de Apache..."
 
-echo "    Descargando style.css..."
-curl -fsSL "$RAW/myrock/style.css" -o "$WEBROOT/style.css"
+WEBROOT=""
 
-echo "    Descargando producto.html..."
-curl -fsSL "$RAW/myrock/producto.html" -o "$WEBROOT/producto.html"
-
-echo "    Descargando producto.css..."
-curl -fsSL "$RAW/myrock/producto.css" -o "$WEBROOT/producto.css"
-
-echo "    Descargando manual del plugin..."
-curl -fsSL "$RAW/manual-myrock-mail-engine.html" -o "$WEBROOT/manual-myrock-mail-engine.html"
-
-echo "    Estableciendo permisos..."
-chown -R www-data:www-data "$WEBROOT"
-chmod -R 755 "$WEBROOT"
-
-# 2. Crear virtualhost nginx para myrock.com.mx
-cat > "$NGINX_CONF" <<'NGINX'
-server {
-    listen 80;
-    listen [::]:80;
-
-    server_name myrock.com.mx www.myrock.com.mx;
-
-    root /var/www/myrock;
-    index index.html;
-
-    # Gzip
-    gzip on;
-    gzip_types text/css application/javascript text/html;
-    gzip_comp_level 6;
-
-    location / {
-        try_files $uri $uri/ =404;
-    }
-
-    # Cache estáticos
-    location ~* \.(css|js|woff2|png|jpg|ico|svg)$ {
-        expires 30d;
-        add_header Cache-Control "public, immutable";
-    }
-}
-NGINX
-
-# 3. Activar el sitio
-if [ ! -L /etc/nginx/sites-enabled/myrock ]; then
-    ln -s "$NGINX_CONF" /etc/nginx/sites-enabled/myrock
-    echo "    Sitio activado en nginx"
+# Buscar en los vhosts activos de Apache
+if command -v apachectl &>/dev/null; then
+  WEBROOT=$(apachectl -S 2>/dev/null \
+    | grep -i "DocumentRoot" \
+    | grep -i "myrock\|www\|html" \
+    | head -1 \
+    | sed 's/.*DocumentRoot[[:space:]]*//' \
+    | tr -d '"' \
+    | xargs)
 fi
 
-# 4. Validar y recargar nginx
-nginx -t && systemctl reload nginx
+# Fallback: revisar rutas comunes
+if [ -z "$WEBROOT" ]; then
+  for candidate in \
+    /var/www/myrock.com.mx \
+    /var/www/myrock \
+    /var/www/html \
+    /home/*/public_html \
+    /srv/www/myrock; do
+    if [ -d "$candidate" ]; then
+      WEBROOT="$candidate"
+      break
+    fi
+  done
+fi
 
+if [ -z "$WEBROOT" ]; then
+  echo "❌ No se pudo detectar el webroot. Especifícalo manualmente:"
+  echo "   WEBROOT=/ruta/correcta bash deploy-myrock.sh"
+  exit 1
+fi
+
+echo "    Webroot encontrado: $WEBROOT"
+
+# ── 2. Descargar archivos ─────────────────────────────────────────
 echo ""
-echo "✅ DONE — MyRock desplegado correctamente"
-echo "   URL: http://31.97.40.155 (o http://myrock.com.mx si el DNS apunta aqui)"
+echo "==> Descargando archivos desde GitHub..."
+
+curl -fsSL "$RAW/myrock/index.html"                -o "$WEBROOT/index.html"    && echo "    ✓ index.html"
+curl -fsSL "$RAW/myrock/style.css"                 -o "$WEBROOT/style.css"     && echo "    ✓ style.css"
+curl -fsSL "$RAW/myrock/producto.html"             -o "$WEBROOT/producto.html" && echo "    ✓ producto.html"
+curl -fsSL "$RAW/myrock/producto.css"              -o "$WEBROOT/producto.css"  && echo "    ✓ producto.css"
+curl -fsSL "$RAW/manual-myrock-mail-engine.html"   -o "$WEBROOT/manual-myrock-mail-engine.html" && echo "    ✓ manual-myrock-mail-engine.html"
+
+# ── 3. Permisos ───────────────────────────────────────────────────
+chown -R www-data:www-data "$WEBROOT" 2>/dev/null || true
+chmod -R 755 "$WEBROOT"
+echo "    ✓ Permisos aplicados"
+
+# ── 4. Recargar servidor web ──────────────────────────────────────
 echo ""
-echo "   Para agregar SSL (Let's Encrypt):"
-echo "   apt install certbot python3-certbot-nginx -y"
-echo "   certbot --nginx -d myrock.com.mx -d www.myrock.com.mx"
+echo "==> Recargando servidor web..."
+
+if systemctl is-active --quiet apache2; then
+  systemctl reload apache2
+  echo "    ✓ Apache recargado"
+elif systemctl is-active --quiet httpd; then
+  systemctl reload httpd
+  echo "    ✓ HTTPD recargado"
+elif systemctl is-active --quiet nginx; then
+  nginx -t && systemctl reload nginx
+  echo "    ✓ Nginx recargado"
+else
+  echo "    ⚠ No se detectó servidor web activo. Recarga manualmente si es necesario."
+fi
+
+# ── 5. Listo ──────────────────────────────────────────────────────
+echo ""
+echo "✅ Deploy completado"
+echo "   Archivos en: $WEBROOT"
+echo "   Sitio:       https://myrock.com.mx"
+echo "   Producto:    https://myrock.com.mx/producto.html"
+echo "   Manual:      https://myrock.com.mx/manual-myrock-mail-engine.html"
