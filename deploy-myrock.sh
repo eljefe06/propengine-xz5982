@@ -8,7 +8,7 @@ REPO="https://github.com/eljefe06/propengine-xz5982"
 # El volumen montado en /var/www/html está en el host aquí:
 WEBROOT="${WEBROOT:-/var/lib/docker/volumes/myrock-stack_wordpress_data/_data}"
 
-echo "==> Desplegando MyRock (archivos estáticos)"
+echo "==> Desplegando MyRock"
 echo "    WEBROOT: $WEBROOT"
 
 # ─── Clonar repo en directorio temporal ──────────────────────────────────────
@@ -20,25 +20,27 @@ echo "==> Clonando repositorio (rama $BRANCH)..."
 git clone --depth=1 --branch "$BRANCH" "$REPO" "$TMPDIR/repo" --quiet
 echo "    ✓ Repo clonado"
 
-# ─── Archivos estáticos en raíz de WordPress ─────────────────────────────────
+# ─── CSS compartido (referenciado desde páginas WP) ──────────────────────────
 echo ""
-echo "==> Desplegando archivos estáticos..."
-cp "$TMPDIR/repo/myrock/index.html"              "$WEBROOT/index.html"              && echo "    ✓ index.html"
-cp "$TMPDIR/repo/myrock/style.css"               "$WEBROOT/style.css"               && echo "    ✓ style.css"
-cp "$TMPDIR/repo/myrock/producto.html"           "$WEBROOT/producto.html"           && echo "    ✓ producto.html"
-cp "$TMPDIR/repo/myrock/producto.css"            "$WEBROOT/producto.css"            && echo "    ✓ producto.css"
-cp "$TMPDIR/repo/manual-myrock-mail-engine.html" "$WEBROOT/manual-myrock-mail-engine.html" && echo "    ✓ manual-myrock-mail-engine.html"
+echo "==> Desplegando CSS..."
+cp "$TMPDIR/repo/myrock/style.css"    "$WEBROOT/style.css"    && echo "    ✓ style.css"
+cp "$TMPDIR/repo/myrock/producto.css" "$WEBROOT/producto.css" && echo "    ✓ producto.css"
+
+# ─── Eliminar HTML estáticos — WordPress maneja el contenido ahora ────────────
+echo ""
+echo "==> Limpiando archivos HTML estáticos (WordPress toma el control)..."
+rm -f "$WEBROOT/index.html"                    && echo "    ✓ index.html eliminado"
+rm -f "$WEBROOT/producto.html"                 && echo "    ✓ producto.html eliminado"
+rm -f "$WEBROOT/manual-myrock-mail-engine.html" && echo "    ✓ manual-myrock-mail-engine.html eliminado"
 
 # ─── Permisos ────────────────────────────────────────────────────────────────
 echo ""
 echo "==> Aplicando permisos..."
-chown -R www-data:www-data "$WEBROOT/index.html" "$WEBROOT/style.css" \
-  "$WEBROOT/producto.html" "$WEBROOT/producto.css" \
-  "$WEBROOT/manual-myrock-mail-engine.html" 2>/dev/null || true
+chown -R www-data:www-data "$WEBROOT/style.css" "$WEBROOT/producto.css" 2>/dev/null || true
 echo "    ✓ Listo"
 
 echo ""
-echo "✅ Deploy completado"
+echo "✅ Deploy completado — WordPress controla el contenido"
 echo "   https://myrock.com.mx"
-echo "   https://myrock.com.mx/producto.html"
-echo "   https://myrock.com.mx/manual-myrock-mail-engine.html"
+echo "   https://myrock.com.mx/myrock-mail-engine/"
+echo "   https://myrock.com.mx/manual-mail-engine/"
