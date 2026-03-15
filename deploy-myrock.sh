@@ -2,39 +2,57 @@
 set -e
 
 BRANCH="claude/install-google-stitch-mcp-zt9ob"
-RAW="https://raw.githubusercontent.com/eljefe06/propengine-xz5982/$BRANCH"
+REPO="https://github.com/eljefe06/propengine-xz5982"
 
-# Permite override: WEBROOT=/otra/ruta bash deploy-myrock.sh
-WEBROOT="${WEBROOT:-/var/www/myrock}"
+# WordPress vive dentro del contenedor Docker myrock-wordpress
+# El volumen montado en /var/www/html está en el host aquí:
+WEBROOT="${WEBROOT:-/var/lib/docker/volumes/myrock-stack_wordpress_data/_data}"
+PLUGINS_DIR="$WEBROOT/wp-content/plugins"
 
-echo "==> Desplegando MyRock en $WEBROOT"
-mkdir -p "$WEBROOT"
+echo "==> Desplegando MyRock"
+echo "    WEBROOT: $WEBROOT"
+
+# ─── Clonar repo en directorio temporal ──────────────────────────────────────
+TMPDIR=$(mktemp -d)
+trap 'rm -rf "$TMPDIR"' EXIT
 
 echo ""
-echo "==> Descargando archivos..."
-curl -fsSL "$RAW/myrock/index.html"              -o "$WEBROOT/index.html"                    && echo "    ✓ index.html"
-curl -fsSL "$RAW/myrock/style.css"               -o "$WEBROOT/style.css"                     && echo "    ✓ style.css"
-curl -fsSL "$RAW/myrock/producto.html"           -o "$WEBROOT/producto.html"                 && echo "    ✓ producto.html"
-curl -fsSL "$RAW/myrock/producto.css"            -o "$WEBROOT/producto.css"                  && echo "    ✓ producto.css"
-curl -fsSL "$RAW/manual-myrock-mail-engine.html" -o "$WEBROOT/manual-myrock-mail-engine.html" && echo "    ✓ manual-myrock-mail-engine.html"
+echo "==> Clonando repositorio (rama $BRANCH)..."
+git clone --depth=1 --branch "$BRANCH" "$REPO" "$TMPDIR/repo" --quiet
+echo "    ✓ Repo clonado"
 
+# ─── Archivos estáticos en raíz de WordPress ─────────────────────────────────
+echo ""
+echo "==> Desplegando archivos estáticos..."
+cp "$TMPDIR/repo/myrock/index.html"              "$WEBROOT/index.html"              && echo "    ✓ index.html"
+cp "$TMPDIR/repo/myrock/style.css"               "$WEBROOT/style.css"               && echo "    ✓ style.css"
+cp "$TMPDIR/repo/myrock/producto.html"           "$WEBROOT/producto.html"           && echo "    ✓ producto.html"
+cp "$TMPDIR/repo/myrock/producto.css"            "$WEBROOT/producto.css"            && echo "    ✓ producto.css"
+cp "$TMPDIR/repo/manual-myrock-mail-engine.html" "$WEBROOT/manual-myrock-mail-engine.html" && echo "    ✓ manual-myrock-mail-engine.html"
+
+# ─── Plugin: eliminar duplicado ──────────────────────────────────────────────
+echo ""
+echo "==> Limpiando plugins duplicados..."
+if [ -d "$PLUGINS_DIR/myrock-mail-engine-1" ]; then
+  rm -rf "$PLUGINS_DIR/myrock-mail-engine-1"
+  echo "    ✓ Eliminado myrock-mail-engine-1"
+else
+  echo "    — myrock-mail-engine-1 no existe, nada que eliminar"
+fi
+
+# ─── Plugin: desplegar versión definitiva ────────────────────────────────────
+echo ""
+echo "==> Desplegando plugin myrock-mail-engine..."
+rm -rf "$PLUGINS_DIR/myrock-mail-engine"
+cp -r "$TMPDIR/repo/myrock-mail-engine" "$PLUGINS_DIR/myrock-mail-engine"
+echo "    ✓ Plugin desplegado"
+
+# ─── Permisos ────────────────────────────────────────────────────────────────
 echo ""
 echo "==> Aplicando permisos..."
 chown -R www-data:www-data "$WEBROOT" 2>/dev/null || true
 chmod -R 755 "$WEBROOT"
 echo "    ✓ Listo"
-
-echo ""
-echo "==> Recargando servidor web..."
-if systemctl is-active --quiet apache2; then
-  systemctl reload apache2 && echo "    ✓ Apache recargado"
-elif systemctl is-active --quiet httpd; then
-  systemctl reload httpd && echo "    ✓ HTTPD recargado"
-elif systemctl is-active --quiet nginx; then
-  nginx -t && systemctl reload nginx && echo "    ✓ Nginx recargado"
-else
-  echo "    ⚠ Recarga el servidor manualmente si es necesario."
-fi
 
 echo ""
 echo "✅ Deploy completado"
