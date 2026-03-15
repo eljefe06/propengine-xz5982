@@ -209,11 +209,60 @@ $default_reply_to   = get_option( 'mrme_reply_to', $default_from_email );
 					</div>
 					<?php endif; ?>
 
-					<p class="description mrme-merge-tags-help">
-						<?php esc_html_e( 'Available merge tags:', 'myrock-mail-engine' ); ?>
-						<code>{{first_name}}</code>, <code>{{last_name}}</code>, <code>{{email}}</code>,
-						<code>{{unsubscribe_url}}</code>, <code>{{site_name}}</code>
+					<div class="mrme-merge-tags-panel">
+					<p class="mrme-merge-tags-panel__title">
+						<span class="dashicons dashicons-editor-code"></span>
+						<?php esc_html_e( 'Variables de personalización (merge tags)', 'myrock-mail-engine' ); ?>
 					</p>
+					<p class="mrme-merge-tags-panel__intro">
+						<?php esc_html_e( 'Copia y pega cualquiera de estas variables dentro del asunto o cuerpo del correo. Se reemplazarán automáticamente con la información real de cada suscriptor al enviarse.', 'myrock-mail-engine' ); ?>
+					</p>
+					<table class="mrme-merge-tags-table">
+						<thead>
+							<tr>
+								<th><?php esc_html_e( 'Variable', 'myrock-mail-engine' ); ?></th>
+								<th><?php esc_html_e( 'Qué inserta', 'myrock-mail-engine' ); ?></th>
+								<th><?php esc_html_e( 'Ejemplo', 'myrock-mail-engine' ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><button type="button" class="mrme-tag-copy" data-tag="{{first_name}}"><code>{{first_name}}</code></button></td>
+								<td><?php esc_html_e( 'Nombre del suscriptor', 'myrock-mail-engine' ); ?></td>
+								<td class="mrme-muted">María</td>
+							</tr>
+							<tr>
+								<td><button type="button" class="mrme-tag-copy" data-tag="{{last_name}}"><code>{{last_name}}</code></button></td>
+								<td><?php esc_html_e( 'Apellido del suscriptor', 'myrock-mail-engine' ); ?></td>
+								<td class="mrme-muted">García</td>
+							</tr>
+							<tr>
+								<td><button type="button" class="mrme-tag-copy" data-tag="{{email}}"><code>{{email}}</code></button></td>
+								<td><?php esc_html_e( 'Correo electrónico del suscriptor', 'myrock-mail-engine' ); ?></td>
+								<td class="mrme-muted">maria@ejemplo.com</td>
+							</tr>
+							<tr>
+								<td><button type="button" class="mrme-tag-copy" data-tag="{{company}}"><code>{{company}}</code></button></td>
+								<td><?php esc_html_e( 'Empresa del suscriptor', 'myrock-mail-engine' ); ?></td>
+								<td class="mrme-muted">Mi Empresa SA</td>
+							</tr>
+							<tr>
+								<td><button type="button" class="mrme-tag-copy" data-tag="{{unsubscribe_url}}"><code>{{unsubscribe_url}}</code></button></td>
+								<td><?php esc_html_e( 'Enlace para cancelar suscripción (requerido por ley)', 'myrock-mail-engine' ); ?></td>
+								<td class="mrme-muted"><?php esc_html_e( 'URL única por suscriptor', 'myrock-mail-engine' ); ?></td>
+							</tr>
+							<tr>
+								<td><button type="button" class="mrme-tag-copy" data-tag="{{site_name}}"><code>{{site_name}}</code></button></td>
+								<td><?php esc_html_e( 'Nombre de tu sitio web', 'myrock-mail-engine' ); ?></td>
+								<td class="mrme-muted"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></td>
+							</tr>
+						</tbody>
+					</table>
+					<p class="mrme-merge-tags-panel__tip">
+						<span class="dashicons dashicons-info-outline"></span>
+						<?php esc_html_e( 'Tip: haz clic en cualquier variable para copiarla al portapapeles.', 'myrock-mail-engine' ); ?>
+					</p>
+				</div>
 				</div>
 
 				<!-- Test send -->

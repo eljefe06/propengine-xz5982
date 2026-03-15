@@ -87,9 +87,9 @@ defined( 'ABSPATH' ) || exit;
 					$c_id     = is_array( $campaign ) ? $campaign['id']     : $campaign->id;
 					$c_title  = is_array( $campaign ) ? $campaign['title']  : $campaign->title;
 					$c_status = is_array( $campaign ) ? $campaign['status'] : $campaign->status;
-					$c_sent   = is_array( $campaign ) ? ( $campaign['stats']['sent']   ?? 0 ) : ( $campaign->stats['sent']   ?? 0 );
-					$c_opens  = is_array( $campaign ) ? ( $campaign['stats']['opens']  ?? 0 ) : ( $campaign->stats['opens']  ?? 0 );
-					$c_clicks = is_array( $campaign ) ? ( $campaign['stats']['clicks'] ?? 0 ) : ( $campaign->stats['clicks'] ?? 0 );
+					$c_sent   = is_array( $campaign ) ? ( $campaign['total_sent']   ?? 0 ) : ( $campaign->total_sent   ?? 0 );
+					$c_opens  = is_array( $campaign ) ? ( $campaign['total_opens']  ?? 0 ) : ( $campaign->total_opens  ?? 0 );
+					$c_clicks = is_array( $campaign ) ? ( $campaign['total_clicks'] ?? 0 ) : ( $campaign->total_clicks ?? 0 );
 					$c_date   = is_array( $campaign ) ? ( $campaign['sent_at'] ?? ( $campaign['scheduled_at'] ?? '' ) ) : ( $campaign->sent_at ?? ( $campaign->scheduled_at ?? '' ) );
 					?>
 				<tr>

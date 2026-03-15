@@ -32,7 +32,7 @@ class Admin {
             __('MyRock Mail', 'myrock-mail-engine'),
             'manage_options',
             'mrme-dashboard',
-            [ new DashboardPage(), 'render' ],
+            '',
             'dashicons-email-alt',
             25
         );

@@ -59,12 +59,12 @@ class LogsPage {
         $where_sql = $where_clauses ? 'WHERE ' . implode( ' AND ', $where_clauses ) : '';
 
         $count_sql = "SELECT COUNT(*) FROM {$logs_table} sl {$where_sql}";
-        $list_sql  = "SELECT sl.*, c.email AS contact_email, cam.name AS campaign_name
+        $list_sql  = "SELECT sl.*, c.email AS contact_email, cam.title AS campaign_title
                       FROM {$logs_table} sl
                       LEFT JOIN {$contacts_table} c ON c.id = sl.contact_id
                       LEFT JOIN {$campaigns_table} cam ON cam.id = sl.campaign_id
                       {$where_sql}
-                      ORDER BY sl.sent_at DESC
+                      ORDER BY sl.id DESC
                       LIMIT %d OFFSET %d";
 
         if ( $placeholders ) {
@@ -90,7 +90,7 @@ class LogsPage {
         // Fetch all campaigns for the filter dropdown.
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
         $all_campaigns = $wpdb->get_results(
-            "SELECT id, name FROM {$campaigns_table} ORDER BY name ASC",
+            "SELECT id, title FROM {$campaigns_table} ORDER BY title ASC",
             ARRAY_A
         );
 
@@ -175,7 +175,7 @@ class LogsPage {
                 printf(
                     '<td><a href="%s">%s</a></td>',
                     esc_url( $campaign_url ),
-                    esc_html( $row['campaign_name'] ?? '' )
+                    esc_html( $row['campaign_title'] ?? '' )
                 );
                 echo '<td>' . esc_html( $row['status'] ) . '</td>';
                 echo '<td>' . esc_html( $row['sent_at'] ?? '—' ) . '</td>';

@@ -39,14 +39,14 @@ class DashboardPage {
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
         $total_sent = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$logs_table}" );
 
-        // Total opens (send_logs rows where opened_at is not null).
+        // Total opens — sum from campaigns table.
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-        $total_opens = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$logs_table} WHERE opened_at IS NOT NULL" );
+        $total_opens = (int) $wpdb->get_var( "SELECT SUM(total_opens) FROM {$campaigns_table}" );
 
         // Recent campaigns (last 5).
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
         $recent_campaigns = $wpdb->get_results(
-            "SELECT id, name, status, created_at FROM {$campaigns_table} ORDER BY created_at DESC LIMIT 5",
+            "SELECT id, title, status, sent_at, scheduled_at, total_sent, total_opens, total_clicks, created_at FROM {$campaigns_table} ORDER BY created_at DESC LIMIT 5",
             ARRAY_A
         );
 
@@ -57,10 +57,9 @@ class DashboardPage {
         // Recent send log activity (last 10).
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
         $recent_logs = $wpdb->get_results(
-            "SELECT sl.id, sl.status, sl.sent_at, sl.opened_at, c.email
+            "SELECT sl.id, sl.status, sl.sent_at, sl.email
              FROM {$logs_table} sl
-             LEFT JOIN {$contacts_table} c ON c.id = sl.contact_id
-             ORDER BY sl.sent_at DESC
+             ORDER BY sl.id DESC
              LIMIT 10",
             ARRAY_A
         );
