@@ -6,6 +6,7 @@ defined( 'ABSPATH' ) || exit;
 use MyRock\MailEngine\Models\Campaign;
 use MyRock\MailEngine\Models\SendLog;
 use MyRock\MailEngine\Mail\MailManager;
+use MyRock\MailEngine\Mail\MailMessage;
 
 class CampaignService {
 
@@ -97,17 +98,7 @@ class CampaignService {
 		}
 
 		// Build pending send-log rows.
-		$log_rows = [];
-		foreach ( $recipients as $contact ) {
-			$log_rows[] = [
-				'campaign_id' => $campaign_id,
-				'contact_id'  => (int) $contact['id'],
-				'email'       => $contact['email'],
-				'status'      => 'pending',
-			];
-		}
-
-		SendLog::bulk_create( $log_rows );
+		SendLog::bulk_create( $campaign_id, $recipients );
 
 		// Send the first batch right away.
 		self::send_batch( $campaign_id, 50 );
@@ -131,7 +122,10 @@ class CampaignService {
 			return 0;
 		}
 
-		$pending_logs = SendLog::get_pending_for_campaign( $campaign_id, $batch_size );
+		$pending_logs = SendLog::find_by_campaign( $campaign_id, [
+			'status' => 'pending',
+			'limit'  => $batch_size,
+		] );
 
 		if ( empty( $pending_logs ) ) {
 			// All done — nothing left to send.
@@ -150,45 +144,42 @@ class CampaignService {
 			// Build contact context for placeholder replacement.
 			$contact = \MyRock\MailEngine\Models\Contact::find( $contact_id );
 			if ( ! $contact ) {
-				SendLog::update( (int) $log['id'], [ 'status' => 'failed', 'error' => 'Contact not found.' ] );
+				SendLog::update_status( (int) $log['id'], 'failed', 'Contact not found.' );
 				$attempted++;
 				continue;
 			}
 
 			$unsubscribe_url = ContactService::generate_unsubscribe_url( $contact_id, $contact['email'] );
 
-			$subject = self::replace_placeholders( $campaign['subject'] ?? '', $contact, $unsubscribe_url );
-			$body    = self::replace_placeholders( $campaign['content'] ?? '', $contact, $unsubscribe_url );
+			$subject   = self::replace_placeholders( $campaign['subject']      ?? '', $contact, $unsubscribe_url );
+			$body_html = self::replace_placeholders( $campaign['content_html'] ?? '', $contact, $unsubscribe_url );
+			$body_text = self::replace_placeholders( $campaign['content_text'] ?? '', $contact, $unsubscribe_url );
 
-			$sent = MailManager::send( [
-				'to'      => $contact['email'],
-				'subject' => $subject,
-				'body'    => $body,
-				'headers' => [
-					'List-Unsubscribe' => '<' . $unsubscribe_url . '>',
-				],
-			] );
+			$message = ( new MailMessage() )
+				->setTo( $contact['email'], trim( ( $contact['first_name'] ?? '' ) . ' ' . ( $contact['last_name'] ?? '' ) ) )
+				->setSubject( $subject )
+				->setHtml( $body_html )
+				->setText( $body_text )
+				->setFrom( $campaign['from_email'] ?? '', $campaign['from_name'] ?? '' )
+				->setReplyTo( $campaign['reply_to'] ?? '' )
+				->addHeader( 'List-Unsubscribe: <' . $unsubscribe_url . '>' );
+
+			$sent = MailManager::send( $message );
 
 			if ( $sent ) {
-				SendLog::update( (int) $log['id'], [
-					'status' => 'sent',
-					'sent_at' => current_time( 'mysql' ),
-				] );
+				SendLog::update_status( (int) $log['id'], 'sent' );
 			} else {
-				SendLog::update( (int) $log['id'], [
-					'status' => 'failed',
-					'error'  => 'MailManager::send() returned false.',
-				] );
+				SendLog::update_status( (int) $log['id'], 'failed', 'MailManager::send() returned false.' );
 			}
 
 			$attempted++;
 		}
 
 		// Increment campaign total_sent counter.
-		Campaign::increment_sent( $campaign_id, $attempted );
+		Campaign::increment( $campaign_id, 'total_sent', $attempted );
 
 		// Check whether all logs are now exhausted.
-		$remaining = SendLog::count_pending_for_campaign( $campaign_id );
+		$remaining = SendLog::count_by_campaign( $campaign_id, 'pending' );
 		if ( $remaining === 0 ) {
 			Campaign::update( $campaign_id, [
 				'status'  => 'sent',
@@ -222,14 +213,19 @@ class CampaignService {
 			'company'    => 'Test Company',
 		];
 
-		$subject = self::replace_placeholders( $campaign['subject'] ?? '', $dummy_contact, home_url( '/' ) );
-		$body    = self::replace_placeholders( $campaign['content'] ?? '', $dummy_contact, home_url( '/' ) );
+		$subject   = self::replace_placeholders( $campaign['subject']      ?? '', $dummy_contact, home_url( '/' ) );
+		$body_html = self::replace_placeholders( $campaign['content_html'] ?? '', $dummy_contact, home_url( '/' ) );
+		$body_text = self::replace_placeholders( $campaign['content_text'] ?? '', $dummy_contact, home_url( '/' ) );
 
-		return MailManager::send( [
-			'to'      => $to_email,
-			'subject' => '[TEST] ' . $subject,
-			'body'    => $body,
-		] );
+		$message = ( new MailMessage() )
+			->setTo( $to_email, 'Test User' )
+			->setSubject( '[TEST] ' . $subject )
+			->setHtml( $body_html )
+			->setText( $body_text )
+			->setFrom( $campaign['from_email'] ?? '', $campaign['from_name'] ?? '' )
+			->setReplyTo( $campaign['reply_to'] ?? '' );
+
+		return MailManager::send( $message );
 	}
 
 	/**
