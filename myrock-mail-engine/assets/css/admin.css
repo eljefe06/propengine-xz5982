@@ -1,0 +1,1054 @@
+/*
+ * MyRock Mail Engine — Admin Stylesheet
+ * Covers: dashboard, contacts, campaigns, settings, logs pages.
+ *
+ * Colour palette:
+ *   Primary gold:  #BFA26A
+ *   Dark:          #1A1A1A
+ *   Success green: #2E7D32
+ *   Error red:     #C62828
+ *   Warning amber: #E65100
+ *   Info blue:     #1565C0
+ *   Gray:          #757575
+ *   Light gray bg: #F5F5F5
+ *   Card bg:       #FFFFFF
+ *   Border:        #E0E0E0
+ */
+
+/* ========================================================================
+   CSS Custom Properties
+   ======================================================================== */
+:root {
+    --mrme-gold:           #BFA26A;
+    --mrme-gold-dark:      #9E8455;
+    --mrme-dark:           #1A1A1A;
+    --mrme-success:        #2E7D32;
+    --mrme-success-light:  #E8F5E9;
+    --mrme-error:          #C62828;
+    --mrme-error-light:    #FFEBEE;
+    --mrme-warning:        #E65100;
+    --mrme-warning-light:  #FFF3E0;
+    --mrme-info:           #1565C0;
+    --mrme-info-light:     #E3F2FD;
+    --mrme-gray:           #757575;
+    --mrme-gray-light:     #F5F5F5;
+    --mrme-border:         #E0E0E0;
+    --mrme-card-bg:        #FFFFFF;
+    --mrme-radius:         6px;
+    --mrme-shadow:         0 1px 4px rgba(0, 0, 0, 0.10);
+    --mrme-shadow-md:      0 2px 8px rgba(0, 0, 0, 0.14);
+    --mrme-font-size:      13px;
+    --mrme-transition:     150ms ease;
+}
+
+/* ========================================================================
+   Global wrapper
+   ======================================================================== */
+.mrme-wrap {
+    padding: 16px 24px 32px;
+    max-width: 1280px;
+    font-size: var(--mrme-font-size);
+    color: var(--mrme-dark);
+}
+
+.mrme-wrap * {
+    box-sizing: border-box;
+}
+
+/* ========================================================================
+   Page header
+   ======================================================================== */
+.mrme-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.mrme-page-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 20px;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--mrme-dark);
+    line-height: 1.3;
+}
+
+.mrme-page-header .mrme-page-title {
+    margin-bottom: 0;
+}
+
+.mrme-logo-mark {
+    color: var(--mrme-gold);
+    font-size: 18px;
+}
+
+.mrme-page-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* ========================================================================
+   Stat cards — dashboard grid
+   ======================================================================== */
+.mrme-stat-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.mrme-stat-cards--small {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+}
+
+.mrme-stat-card {
+    background: var(--mrme-card-bg);
+    border: 1px solid var(--mrme-border);
+    border-radius: var(--mrme-radius);
+    box-shadow: var(--mrme-shadow);
+    padding: 20px 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: box-shadow var(--mrme-transition);
+}
+
+.mrme-stat-card:hover {
+    box-shadow: var(--mrme-shadow-md);
+}
+
+.mrme-stat-card__icon {
+    font-size: 22px;
+    color: var(--mrme-gold);
+    margin-bottom: 6px;
+}
+
+.mrme-stat-card__value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--mrme-dark);
+    line-height: 1.1;
+}
+
+.mrme-stat-card__label {
+    font-size: 12px;
+    color: var(--mrme-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.mrme-stat-card__link {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--mrme-gold);
+    text-decoration: none;
+}
+
+.mrme-stat-card__link:hover {
+    color: var(--mrme-gold-dark);
+    text-decoration: underline;
+}
+
+/* Small variant */
+.mrme-stat-cards--small .mrme-stat-card {
+    padding: 14px 12px;
+}
+
+.mrme-stat-cards--small .mrme-stat-card__value {
+    font-size: 20px;
+}
+
+/* ========================================================================
+   Status badge
+   ======================================================================== */
+.mrme-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+/* Contact statuses */
+.mrme-badge--subscribed {
+    background: var(--mrme-success-light);
+    color: var(--mrme-success);
+}
+
+.mrme-badge--unsubscribed {
+    background: var(--mrme-error-light);
+    color: var(--mrme-error);
+}
+
+.mrme-badge--pending {
+    background: var(--mrme-warning-light);
+    color: var(--mrme-warning);
+}
+
+.mrme-badge--bounced {
+    background: #EEEEEE;
+    color: var(--mrme-gray);
+}
+
+/* Campaign statuses */
+.mrme-badge--draft {
+    background: #EEEEEE;
+    color: var(--mrme-gray);
+}
+
+.mrme-badge--scheduled {
+    background: var(--mrme-info-light);
+    color: var(--mrme-info);
+}
+
+.mrme-badge--sending {
+    background: var(--mrme-warning-light);
+    color: var(--mrme-warning);
+}
+
+.mrme-badge--sent {
+    background: var(--mrme-success-light);
+    color: var(--mrme-success);
+}
+
+/* Inline with title */
+.mrme-badge--title {
+    font-size: 13px;
+    padding: 4px 12px;
+    vertical-align: middle;
+}
+
+/* ========================================================================
+   Tag chips
+   ======================================================================== */
+.mrme-tag {
+    display: inline-block;
+    background: #EDE7D4;
+    color: var(--mrme-gold-dark);
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-weight: 500;
+    margin: 1px 2px;
+}
+
+/* ========================================================================
+   Tables
+   ======================================================================== */
+.mrme-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--mrme-card-bg);
+    border: 1px solid var(--mrme-border);
+    border-radius: var(--mrme-radius);
+    overflow: hidden;
+    box-shadow: var(--mrme-shadow);
+    font-size: var(--mrme-font-size);
+}
+
+.mrme-table thead tr {
+    background: var(--mrme-gray-light);
+}
+
+.mrme-table th,
+.mrme-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--mrme-border);
+    vertical-align: middle;
+}
+
+.mrme-table th {
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--mrme-gray);
+}
+
+.mrme-table tbody tr:nth-child(odd) {
+    background: #FAFAFA;
+}
+
+.mrme-table tbody tr:hover {
+    background: #F9F6F0;
+}
+
+.mrme-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.mrme-table__check {
+    width: 28px;
+    padding-right: 0;
+}
+
+.mrme-table__actions {
+    white-space: nowrap;
+}
+
+.mrme-row-actions {
+    font-size: 11px;
+    color: var(--mrme-gray);
+    margin-top: 3px;
+    visibility: hidden;
+    transition: visibility 0ms;
+}
+
+.mrme-table tbody tr:hover .mrme-row-actions {
+    visibility: visible;
+}
+
+.mrme-row-actions a {
+    color: var(--mrme-gray);
+    text-decoration: none;
+}
+
+.mrme-row-actions a:hover {
+    color: var(--mrme-gold);
+}
+
+/* ========================================================================
+   Filter bar
+   ======================================================================== */
+.mrme-filter-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--mrme-border);
+    padding-bottom: 12px;
+}
+
+/* Status tabs */
+.mrme-status-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mrme-status-tabs__item a {
+    display: block;
+    padding: 5px 12px;
+    text-decoration: none;
+    color: var(--mrme-gray);
+    border-bottom: 2px solid transparent;
+    font-size: 13px;
+    transition: color var(--mrme-transition), border-color var(--mrme-transition);
+}
+
+.mrme-status-tabs__item a:hover {
+    color: var(--mrme-dark);
+    border-bottom-color: var(--mrme-border);
+}
+
+.mrme-status-tabs__item--active a {
+    color: var(--mrme-gold-dark);
+    border-bottom-color: var(--mrme-gold);
+    font-weight: 600;
+}
+
+/* Search form */
+.mrme-search-form {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.mrme-search-form__input {
+    padding: 5px 10px;
+    border: 1px solid var(--mrme-border);
+    border-radius: 4px;
+    width: 220px;
+    font-size: var(--mrme-font-size);
+    transition: border-color var(--mrme-transition);
+}
+
+.mrme-search-form__input:focus {
+    border-color: var(--mrme-gold);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(191, 162, 106, 0.20);
+}
+
+/* Results summary */
+.mrme-results-summary {
+    color: var(--mrme-gray);
+    font-size: 12px;
+    margin: 0 0 10px;
+}
+
+/* ========================================================================
+   Bulk action bar
+   ======================================================================== */
+.mrme-bulk-action-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.mrme-bulk-select {
+    padding: 4px 6px;
+    border: 1px solid var(--mrme-border);
+    border-radius: 4px;
+    font-size: var(--mrme-font-size);
+}
+
+/* ========================================================================
+   Pagination
+   ======================================================================== */
+.mrme-pagination {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.mrme-pagination .page-numbers {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 30px;
+    padding: 0 8px;
+    border: 1px solid var(--mrme-border);
+    border-radius: 4px;
+    margin: 0 2px;
+    text-decoration: none;
+    font-size: 12px;
+    color: var(--mrme-dark);
+    background: var(--mrme-card-bg);
+    transition: background var(--mrme-transition), color var(--mrme-transition);
+}
+
+.mrme-pagination .page-numbers.current {
+    background: var(--mrme-gold);
+    color: #fff;
+    border-color: var(--mrme-gold);
+    font-weight: 600;
+}
+
+.mrme-pagination .page-numbers:hover:not(.current) {
+    background: var(--mrme-gray-light);
+}
+
+/* ========================================================================
+   Empty state
+   ======================================================================== */
+.mrme-empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--mrme-gray);
+    background: var(--mrme-card-bg);
+    border: 1px solid var(--mrme-border);
+    border-radius: var(--mrme-radius);
+}
+
+.mrme-empty-state__icon {
+    font-size: 48px;
+    color: var(--mrme-border);
+    display: block;
+    margin-bottom: 12px;
+}
+
+/* ========================================================================
+   Section / card
+   ======================================================================== */
+.mrme-section {
+    margin-bottom: 28px;
+}
+
+.mrme-section__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.mrme-section__header h2 {
+    margin: 0;
+    font-size: 16px;
+}
+
+/* ========================================================================
+   Quick links (dashboard)
+   ======================================================================== */
+.mrme-quick-links__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.mrme-quick-link-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 24px 16px;
+    background: var(--mrme-card-bg);
+    border: 1px solid var(--mrme-border);
+    border-radius: var(--mrme-radius);
+    text-decoration: none;
+    color: var(--mrme-dark);
+    font-weight: 500;
+    box-shadow: var(--mrme-shadow);
+    transition: box-shadow var(--mrme-transition), border-color var(--mrme-transition);
+    text-align: center;
+}
+
+.mrme-quick-link-card:hover {
+    border-color: var(--mrme-gold);
+    box-shadow: var(--mrme-shadow-md);
+    color: var(--mrme-gold-dark);
+}
+
+.mrme-quick-link-card__icon {
+    font-size: 28px;
+    color: var(--mrme-gold);
+}
+
+/* ========================================================================
+   Form layout (edit pages)
+   ======================================================================== */
+.mrme-edit-form__layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+    align-items: start;
+}
+
+.mrme-edit-form__main {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.mrme-edit-form__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* ========================================================================
+   Form sections / cards
+   ======================================================================== */
+.mrme-form-section--card {
+    background: var(--mrme-card-bg);
+    border: 1px solid var(--mrme-border);
+    border-radius: var(--mrme-radius);
+    padding: 20px 22px;
+    box-shadow: var(--mrme-shadow);
+}
+
+.mrme-form-section__title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--mrme-border);
+    color: var(--mrme-dark);
+}
+
+.mrme-form-section__row {
+    margin-bottom: 16px;
+}
+
+.mrme-form-section__row:last-child {
+    margin-bottom: 0;
+}
+
+.mrme-form-section__row--cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.mrme-form-section__row--inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mrme-form-section__label {
+    display: block;
+    font-weight: 600;
+    font-size: 12px;
+    margin-bottom: 5px;
+    color: var(--mrme-dark);
+}
+
+.mrme-form-section__input,
+.mrme-form-section__select,
+.mrme-form-section__textarea {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid var(--mrme-border);
+    border-radius: 4px;
+    font-size: var(--mrme-font-size);
+    color: var(--mrme-dark);
+    background: #fff;
+    transition: border-color var(--mrme-transition);
+}
+
+.mrme-form-section__input:focus,
+.mrme-form-section__select:focus,
+.mrme-form-section__textarea:focus {
+    border-color: var(--mrme-gold);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(191, 162, 106, 0.20);
+}
+
+.mrme-form-section__textarea {
+    resize: vertical;
+}
+
+.mrme-meta-textarea {
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.mrme-field-error {
+    color: var(--mrme-error);
+    font-size: 11px;
+    margin-top: 4px;
+    display: block;
+}
+
+/* ========================================================================
+   Submit box (sidebar card)
+   ======================================================================== */
+.mrme-submit-box .mrme-form-section__title {
+    margin-bottom: 12px;
+}
+
+.mrme-submit-box__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mrme-submit-box__actions .button {
+    text-align: center;
+    justify-content: center;
+}
+
+.mrme-submit-box__cancel {
+    margin-top: 10px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.mrme-submit-box__cancel a {
+    color: var(--mrme-gray);
+    text-decoration: none;
+}
+
+.mrme-submit-box__cancel a:hover {
+    color: var(--mrme-gold-dark);
+}
+
+/* ========================================================================
+   Checkboxes grid (for lists / tags)
+   ======================================================================== */
+.mrme-checkbox-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.mrme-checkbox-grid__item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: var(--mrme-font-size);
+    cursor: pointer;
+}
+
+.mrme-checkbox-grid__item input[type="checkbox"] {
+    accent-color: var(--mrme-gold);
+    width: 14px;
+    height: 14px;
+}
+
+.mrme-checkbox-inline {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: var(--mrme-font-size);
+    cursor: pointer;
+}
+
+/* ========================================================================
+   Definition list (record info)
+   ======================================================================== */
+.mrme-dl {
+    margin: 0;
+    font-size: var(--mrme-font-size);
+}
+
+.mrme-dl dt {
+    font-weight: 600;
+    color: var(--mrme-gray);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 10px;
+}
+
+.mrme-dl dt:first-child {
+    margin-top: 0;
+}
+
+.mrme-dl dd {
+    margin: 2px 0 0;
+    color: var(--mrme-dark);
+}
+
+/* ========================================================================
+   Modal
+   ======================================================================== */
+.mrme-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    align-items: center;
+    justify-content: center;
+}
+
+.mrme-modal[aria-hidden="false"],
+.mrme-modal.is-open {
+    display: flex;
+}
+
+.mrme-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.mrme-modal__content {
+    position: relative;
+    background: var(--mrme-card-bg);
+    border-radius: var(--mrme-radius);
+    box-shadow: var(--mrme-shadow-md);
+    width: 100%;
+    max-width: 580px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 0;
+    animation: mrme-modal-in 180ms ease;
+}
+
+@keyframes mrme-modal-in {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.mrme-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--mrme-border);
+}
+
+.mrme-modal__header h2 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.mrme-modal__close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--mrme-gray);
+    line-height: 1;
+    padding: 4px 6px;
+    border-radius: 4px;
+    transition: background var(--mrme-transition);
+}
+
+.mrme-modal__close:hover {
+    background: var(--mrme-gray-light);
+    color: var(--mrme-dark);
+}
+
+.mrme-import-form {
+    padding: 18px 22px;
+}
+
+.mrme-modal__footer {
+    display: flex;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--mrme-border);
+    margin-top: 20px;
+}
+
+/* ========================================================================
+   Settings table override
+   ======================================================================== */
+.mrme-settings-form .mrme-form-section--card {
+    margin-bottom: 20px;
+}
+
+.mrme-settings-table {
+    margin: 0 !important;
+}
+
+.mrme-settings-table th {
+    width: 200px;
+    vertical-align: top;
+    padding-top: 12px;
+}
+
+.mrme-radio-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: var(--mrme-font-size);
+    cursor: pointer;
+}
+
+.mrme-radio-label input[type="radio"] {
+    accent-color: var(--mrme-gold);
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+.mrme-settings-submit {
+    margin-top: 8px;
+}
+
+/* API key display */
+.mrme-api-key-display {
+    display: inline-block;
+    background: var(--mrme-gray-light);
+    border: 1px solid var(--mrme-border);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-family: monospace;
+    font-size: 12px;
+    word-break: break-all;
+    max-width: 380px;
+    user-select: all;
+}
+
+/* Danger zone */
+.mrme-danger-zone {
+    border-color: var(--mrme-error);
+}
+
+.mrme-danger-zone__title {
+    color: var(--mrme-error);
+}
+
+.mrme-danger-zone__desc {
+    color: var(--mrme-error) !important;
+    font-style: italic;
+}
+
+/* ========================================================================
+   Inline notices
+   ======================================================================== */
+.mrme-inline-notice {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.mrme-inline-notice--success {
+    background: var(--mrme-success-light);
+    color: var(--mrme-success);
+}
+
+.mrme-inline-notice--error {
+    background: var(--mrme-error-light);
+    color: var(--mrme-error);
+}
+
+/* ========================================================================
+   Muted / helper text
+   ======================================================================== */
+.mrme-muted {
+    color: var(--mrme-gray);
+}
+
+/* ========================================================================
+   Action links colours
+   ======================================================================== */
+.mrme-action--delete {
+    color: var(--mrme-error) !important;
+}
+
+.mrme-action--delete:hover {
+    color: #8B0000 !important;
+}
+
+/* ========================================================================
+   Merge tags help
+   ======================================================================== */
+.mrme-merge-tags-help {
+    margin-top: 8px;
+}
+
+.mrme-merge-tags-help code {
+    background: var(--mrme-gray-light);
+    border: 1px solid var(--mrme-border);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 12px;
+}
+
+/* ========================================================================
+   Logs page specifics
+   ======================================================================== */
+.mrme-logs-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.mrme-logs-filter select {
+    padding: 5px 8px;
+    border: 1px solid var(--mrme-border);
+    border-radius: 4px;
+    font-size: var(--mrme-font-size);
+}
+
+.mrme-log-error-text {
+    color: var(--mrme-error);
+    font-size: 11px;
+    max-width: 260px;
+    word-break: break-word;
+}
+
+/* ========================================================================
+   Automation step builder
+   ======================================================================== */
+.mrme-automation-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mrme-step-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--mrme-gray-light);
+    border: 1px solid var(--mrme-border);
+    border-radius: var(--mrme-radius);
+    padding: 10px 14px;
+}
+
+.mrme-step-row select,
+.mrme-step-row input[type="number"] {
+    padding: 5px 8px;
+    border: 1px solid var(--mrme-border);
+    border-radius: 4px;
+    font-size: var(--mrme-font-size);
+}
+
+.mrme-step-row__handle {
+    cursor: grab;
+    color: var(--mrme-gray);
+    font-size: 16px;
+}
+
+.mrme-step-row__remove {
+    margin-left: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--mrme-error);
+    font-size: 16px;
+    padding: 2px;
+    line-height: 1;
+    border-radius: 3px;
+    transition: background var(--mrme-transition);
+}
+
+.mrme-step-row__remove:hover {
+    background: var(--mrme-error-light);
+}
+
+/* ========================================================================
+   Responsive — collapse to single column below 900 px
+   ======================================================================== */
+@media screen and (max-width: 900px) {
+    .mrme-stat-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mrme-edit-form__layout {
+        grid-template-columns: 1fr;
+    }
+
+    .mrme-quick-links__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mrme-search-form {
+        margin-left: 0;
+    }
+
+    .mrme-filter-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .mrme-wrap {
+        padding: 12px 16px 24px;
+    }
+
+    .mrme-stat-cards {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .mrme-form-section__row--cols {
+        grid-template-columns: 1fr;
+    }
+
+    .mrme-quick-links__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mrme-stat-cards--small {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mrme-settings-table th {
+        width: auto;
+    }
+
+    .mrme-modal__content {
+        margin: 16px;
+        max-width: 100%;
+    }
+}

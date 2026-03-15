@@ -1,0 +1,346 @@
+/*
+ * MyRock Mail Engine — Public / Frontend Stylesheet
+ * Styles for the [mrme_form] subscription form shortcode.
+ *
+ * Supports CSS variable theming for both light and dark themes.
+ * Theme is switched by adding the class .mrme-form--dark to the <form>
+ * or by prefers-color-scheme media query on the wrapper.
+ */
+
+/* ========================================================================
+   CSS Custom Properties — Light theme (default)
+   ======================================================================== */
+:root {
+    --mrme-pub-primary:        #BFA26A;
+    --mrme-pub-primary-dark:   #9E8455;
+    --mrme-pub-primary-light:  #F7F2E8;
+    --mrme-pub-fg:             #1A1A1A;
+    --mrme-pub-fg-muted:       #6B6B6B;
+    --mrme-pub-bg:             #FFFFFF;
+    --mrme-pub-border:         #D5D5D5;
+    --mrme-pub-border-focus:   #BFA26A;
+    --mrme-pub-input-bg:       #FFFFFF;
+    --mrme-pub-radius:         6px;
+    --mrme-pub-radius-btn:     4px;
+    --mrme-pub-shadow:         0 1px 3px rgba(0, 0, 0, 0.08);
+    --mrme-pub-success-bg:     #E8F5E9;
+    --mrme-pub-success-fg:     #2E7D32;
+    --mrme-pub-success-border: #A5D6A7;
+    --mrme-pub-error-bg:       #FFEBEE;
+    --mrme-pub-error-fg:       #C62828;
+    --mrme-pub-error-border:   #EF9A9A;
+    --mrme-pub-font:           inherit;
+    --mrme-pub-font-size:      15px;
+    --mrme-pub-line-height:    1.6;
+    --mrme-pub-transition:     150ms ease;
+}
+
+/* ========================================================================
+   Dark theme — via class on wrapper
+   ======================================================================== */
+.mrme-form--dark,
+.mrme-form-wrapper.mrme-form--dark .mrme-form {
+    --mrme-pub-fg:        #F0EEE8;
+    --mrme-pub-fg-muted:  #A0A0A0;
+    --mrme-pub-bg:        #1E1E1E;
+    --mrme-pub-border:    #3A3A3A;
+    --mrme-pub-input-bg:  #2A2A2A;
+    --mrme-pub-primary-light: #2D2820;
+}
+
+/* Respect OS-level dark-mode preference when no explicit class is present */
+@media ( prefers-color-scheme: dark ) {
+    .mrme-form-wrapper:not(.mrme-form--light) {
+        --mrme-pub-fg:        #F0EEE8;
+        --mrme-pub-fg-muted:  #A0A0A0;
+        --mrme-pub-bg:        #1E1E1E;
+        --mrme-pub-border:    #3A3A3A;
+        --mrme-pub-input-bg:  #2A2A2A;
+        --mrme-pub-primary-light: #2D2820;
+    }
+}
+
+/* ========================================================================
+   Outer wrapper
+   ======================================================================== */
+.mrme-form-wrapper {
+    font-family: var(--mrme-pub-font);
+    font-size: var(--mrme-pub-font-size);
+    line-height: var(--mrme-pub-line-height);
+    color: var(--mrme-pub-fg);
+}
+
+/* ========================================================================
+   Form container
+   ======================================================================== */
+.mrme-form {
+    max-width: 480px;
+    width: 100%;
+    background: var(--mrme-pub-bg);
+    border: 1px solid var(--mrme-pub-border);
+    border-radius: var(--mrme-pub-radius);
+    box-shadow: var(--mrme-pub-shadow);
+    padding: 28px 28px 24px;
+    box-sizing: border-box;
+}
+
+/* When embedded inside a wider container without a border box, remove card look */
+.mrme-form--inline {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    padding: 0;
+}
+
+/* ========================================================================
+   Form field wrapper
+   ======================================================================== */
+.mrme-form__field {
+    margin-bottom: 18px;
+}
+
+.mrme-form__field:last-child {
+    margin-bottom: 0;
+}
+
+.mrme-form__field--submit {
+    margin-top: 8px;
+}
+
+/* ========================================================================
+   Label
+   ======================================================================== */
+.mrme-form__label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--mrme-pub-fg);
+    letter-spacing: 0.01em;
+}
+
+.mrme-form__required {
+    color: var(--mrme-pub-error-fg);
+    margin-left: 2px;
+}
+
+/* ========================================================================
+   Text / email / tel inputs
+   ======================================================================== */
+.mrme-form__input {
+    display: block;
+    width: 100%;
+    padding: 10px 13px;
+    font-size: var(--mrme-pub-font-size);
+    font-family: var(--mrme-pub-font);
+    color: var(--mrme-pub-fg);
+    background: var(--mrme-pub-input-bg);
+    border: 1px solid var(--mrme-pub-border);
+    border-radius: var(--mrme-pub-radius);
+    transition:
+        border-color var(--mrme-pub-transition),
+        box-shadow var(--mrme-pub-transition);
+    box-sizing: border-box;
+    line-height: 1.4;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.mrme-form__input::placeholder {
+    color: var(--mrme-pub-fg-muted);
+    opacity: 1;
+}
+
+.mrme-form__input:focus {
+    border-color: var(--mrme-pub-border-focus);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(191, 162, 106, 0.22);
+}
+
+/* Validation states */
+.mrme-form__input.is-invalid,
+.mrme-form__input[aria-invalid="true"] {
+    border-color: var(--mrme-pub-error-fg);
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.15);
+}
+
+.mrme-form__input.is-valid {
+    border-color: var(--mrme-pub-success-fg);
+}
+
+/* ========================================================================
+   Field error message (inline)
+   ======================================================================== */
+.mrme-form__error-msg {
+    display: none;
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--mrme-pub-error-fg);
+}
+
+.mrme-form__field.has-error .mrme-form__error-msg {
+    display: block;
+}
+
+.mrme-form__field.has-error .mrme-form__input {
+    border-color: var(--mrme-pub-error-fg);
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.15);
+}
+
+/* ========================================================================
+   Submit button
+   ======================================================================== */
+.mrme-form__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px 20px;
+    font-size: var(--mrme-pub-font-size);
+    font-family: var(--mrme-pub-font);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: #FFFFFF;
+    background: var(--mrme-pub-primary);
+    border: none;
+    border-radius: var(--mrme-pub-radius-btn);
+    cursor: pointer;
+    transition:
+        background var(--mrme-pub-transition),
+        transform 80ms ease,
+        box-shadow var(--mrme-pub-transition);
+    box-shadow: 0 2px 5px rgba(191, 162, 106, 0.35);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.mrme-form__submit:hover {
+    background: var(--mrme-pub-primary-dark);
+    box-shadow: 0 4px 10px rgba(158, 132, 85, 0.40);
+}
+
+.mrme-form__submit:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 3px rgba(158, 132, 85, 0.30);
+}
+
+.mrme-form__submit:focus {
+    outline: none;
+    box-shadow:
+        0 0 0 3px rgba(191, 162, 106, 0.40),
+        0 2px 5px rgba(191, 162, 106, 0.35);
+}
+
+.mrme-form__submit:disabled,
+.mrme-form__submit.is-loading {
+    opacity: 0.65;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Loading spinner inside button */
+.mrme-form__submit.is-loading::after {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-left: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.50);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: mrme-spin 0.6s linear infinite;
+    vertical-align: middle;
+}
+
+@keyframes mrme-spin {
+    to { transform: rotate( 360deg ); }
+}
+
+/* ========================================================================
+   Notice / feedback messages
+   ======================================================================== */
+.mrme-form__notice {
+    display: none;
+    padding: 12px 16px;
+    border-radius: var(--mrme-pub-radius);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    border: 1px solid transparent;
+}
+
+.mrme-form__notice.is-visible {
+    display: block;
+}
+
+/* Success */
+.mrme-form--success,
+.mrme-form__notice.mrme-form--success {
+    display: block;
+    background: var(--mrme-pub-success-bg);
+    color: var(--mrme-pub-success-fg);
+    border-color: var(--mrme-pub-success-border);
+}
+
+/* Error */
+.mrme-form--error,
+.mrme-form__notice.mrme-form--error {
+    display: block;
+    background: var(--mrme-pub-error-bg);
+    color: var(--mrme-pub-error-fg);
+    border-color: var(--mrme-pub-error-border);
+}
+
+/* AJAX-mode: replace form content after success */
+.mrme-form-wrapper .mrme-form.is-submitted {
+    display: none;
+}
+
+.mrme-form-wrapper .mrme-form-success-message {
+    padding: 20px;
+    background: var(--mrme-pub-success-bg);
+    color: var(--mrme-pub-success-fg);
+    border: 1px solid var(--mrme-pub-success-border);
+    border-radius: var(--mrme-pub-radius);
+    font-weight: 500;
+    font-size: 15px;
+    text-align: center;
+}
+
+/* ========================================================================
+   Honey-pot field (hidden from humans, shown to bots)
+   ======================================================================== */
+.mrme-form__field--honeypot {
+    display: none !important;
+    visibility: hidden;
+    position: absolute;
+    left: -9999px;
+}
+
+/* ========================================================================
+   Privacy / GDPR note below form
+   ======================================================================== */
+.mrme-form__privacy-note {
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--mrme-pub-fg-muted);
+    text-align: center;
+}
+
+.mrme-form__privacy-note a {
+    color: var(--mrme-pub-primary);
+    text-decoration: underline;
+}
+
+/* ========================================================================
+   Responsive
+   ======================================================================== */
+@media ( max-width: 520px ) {
+    .mrme-form {
+        padding: 20px 16px;
+    }
+
+    .mrme-form__submit {
+        padding: 11px 16px;
+    }
+}

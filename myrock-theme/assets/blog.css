@@ -1,0 +1,2423 @@
+/* ==========================================================================
+   MyRock Theme — Blog Stylesheet
+   Premium dark editorial design system
+   @package MyRock_Theme
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS Custom Properties
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Color palette */
+  --c-bg:       #080808;
+  --c-bg-2:     #0D0D0D;
+  --c-surface:  #111111;
+  --c-border:   #1C1C1C;
+  --c-text-1:   #EDEBE6;
+  --c-text-2:   #7A7A7A;
+  --c-text-3:   #3A3A3A;
+  --c-gold:     #BFA26A;
+  --c-gold-dim: rgba(191, 162, 106, 0.15);
+  --c-gold-glow:rgba(191, 162, 106, 0.08);
+
+  /* Typography */
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-sans:  'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:  'DM Mono', 'Courier New', monospace;
+
+  /* Spacing scale */
+  --sp-1:   4px;
+  --sp-2:   8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-8:  32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+  --sp-20: 80px;
+  --sp-24: 96px;
+  --sp-32: 128px;
+
+  /* Layout */
+  --max-w:        1440px;
+  --max-w-narrow: 720px;
+  --header-h:     72px;
+  --px:           clamp(20px, 4vw, 64px);
+
+  /* Transitions */
+  --t-fast:   120ms ease;
+  --t-base:   220ms ease;
+  --t-slow:   400ms ease;
+
+  /* Radii */
+  --r-sm:  4px;
+  --r-md:  8px;
+  --r-lg: 16px;
+  --r-xl: 24px;
+  --r-pill: 9999px;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. Base Reset & Body
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--c-bg);
+  color: var(--c-text-1);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. Layout Containers
+   -------------------------------------------------------------------------- */
+
+.mr-container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin-inline: auto;
+  padding-inline: var(--px);
+}
+
+.mr-container--narrow {
+  width: 100%;
+  max-width: var(--max-w-narrow);
+  margin-inline: auto;
+  padding-inline: var(--px);
+}
+
+
+/* --------------------------------------------------------------------------
+   4. Site Header
+   -------------------------------------------------------------------------- */
+
+.mr-site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--header-h);
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background var(--t-slow),
+    border-color var(--t-slow),
+    backdrop-filter var(--t-slow);
+}
+
+.mr-site-header.scrolled {
+  background: rgba(8, 8, 8, 0.88);
+  border-bottom-color: var(--c-border);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+.mr-header-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-8);
+}
+
+
+/* --------------------------------------------------------------------------
+   5. Logo
+   -------------------------------------------------------------------------- */
+
+.mr-site-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: opacity var(--t-base);
+}
+
+.mr-site-logo:hover {
+  opacity: 0.8;
+}
+
+.mr-logo-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-sm);
+  background: var(--c-gold);
+  color: #080808;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mr-logo-name {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--c-text-1);
+  letter-spacing: -0.01em;
+}
+
+
+/* --------------------------------------------------------------------------
+   6. Header Navigation
+   -------------------------------------------------------------------------- */
+
+.mr-header-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-6);
+  margin-left: auto;
+}
+
+.mr-header-nav a {
+  font-size: 0.875rem;
+  font-weight: 450;
+  color: var(--c-text-2);
+  letter-spacing: 0.01em;
+  position: relative;
+  transition: color var(--t-base);
+}
+
+.mr-header-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--c-gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t-base);
+}
+
+.mr-header-nav a:hover,
+.mr-header-nav a[aria-current="page"] {
+  color: var(--c-text-1);
+}
+
+.mr-header-nav a:hover::after,
+.mr-header-nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+
+/* --------------------------------------------------------------------------
+   7. Header CTA Button
+   -------------------------------------------------------------------------- */
+
+.mr-header-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  border: 1px solid var(--c-gold);
+  border-radius: var(--r-pill);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--c-gold);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition:
+    background var(--t-base),
+    color var(--t-base),
+    border-color var(--t-base);
+}
+
+.mr-header-cta:hover {
+  background: var(--c-gold);
+  color: #080808;
+}
+
+
+/* --------------------------------------------------------------------------
+   8. Mobile Menu Button
+   -------------------------------------------------------------------------- */
+
+.mr-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
+  color: var(--c-text-1);
+  flex-shrink: 0;
+  transition: background var(--t-base);
+}
+
+.mr-menu-btn:hover {
+  background: var(--c-surface);
+}
+
+.mr-menu-btn svg line {
+  transition: transform var(--t-base), opacity var(--t-base);
+  transform-origin: center;
+}
+
+.mr-menu-btn[aria-expanded="true"] svg line:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.mr-menu-btn[aria-expanded="true"] svg line:nth-child(2) {
+  opacity: 0;
+}
+
+.mr-menu-btn[aria-expanded="true"] svg line:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+
+/* --------------------------------------------------------------------------
+   9. Archive Header
+   -------------------------------------------------------------------------- */
+
+.mr-archive-header {
+  padding-top: calc(var(--header-h) + var(--sp-16));
+  padding-bottom: var(--sp-16);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.mr-archive-header .mr-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sp-8);
+  align-items: end;
+}
+
+
+/* --------------------------------------------------------------------------
+   10. Archive Eyebrow
+   -------------------------------------------------------------------------- */
+
+.mr-archive-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  margin-bottom: var(--sp-4);
+}
+
+.mr-archive-eyebrow::before {
+  content: '';
+  display: block;
+  width: 28px;
+  height: 1px;
+  background: var(--c-gold);
+  flex-shrink: 0;
+}
+
+
+/* --------------------------------------------------------------------------
+   11. Archive Title
+   -------------------------------------------------------------------------- */
+
+.mr-archive-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--c-text-1);
+  max-width: 16ch;
+}
+
+.mr-archive-title em {
+  font-style: italic;
+  color: var(--c-gold);
+}
+
+
+/* --------------------------------------------------------------------------
+   12. Archive Description
+   -------------------------------------------------------------------------- */
+
+.mr-archive-desc {
+  font-size: 1rem;
+  color: var(--c-text-2);
+  line-height: 1.65;
+  max-width: 50ch;
+  margin-top: var(--sp-4);
+}
+
+
+/* --------------------------------------------------------------------------
+   13. Search Form
+   -------------------------------------------------------------------------- */
+
+.mr-search-form {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--c-surface);
+  transition: border-color var(--t-base);
+}
+
+.mr-search-form:focus-within {
+  border-color: var(--c-gold);
+}
+
+.mr-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  color: var(--c-text-1);
+  min-width: 0;
+}
+
+.mr-search-input::placeholder {
+  color: var(--c-text-3);
+}
+
+.mr-search-btn {
+  padding: 10px 16px;
+  background: var(--c-border);
+  color: var(--c-text-2);
+  font-size: 0.8125rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  transition:
+    background var(--t-base),
+    color var(--t-base);
+  border-left: 1px solid var(--c-border);
+  white-space: nowrap;
+}
+
+.mr-search-btn:hover {
+  background: var(--c-gold);
+  color: #080808;
+}
+
+
+/* --------------------------------------------------------------------------
+   14. Category Navigation
+   -------------------------------------------------------------------------- */
+
+.mr-category-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  overflow-x: auto;
+  padding-block: var(--sp-6);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.mr-category-nav::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   15. Category Pills
+   -------------------------------------------------------------------------- */
+
+.mr-cat-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text-2);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition:
+    border-color var(--t-base),
+    color var(--t-base),
+    background var(--t-base);
+}
+
+.mr-cat-pill:hover {
+  border-color: var(--c-gold);
+  color: var(--c-gold);
+}
+
+.mr-cat-pill.active {
+  background: var(--c-gold-dim);
+  border-color: var(--c-gold);
+  color: var(--c-gold);
+}
+
+
+/* --------------------------------------------------------------------------
+   16. Posts Grid
+   -------------------------------------------------------------------------- */
+
+.mr-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-6);
+  padding-block: var(--sp-10);
+}
+
+
+/* --------------------------------------------------------------------------
+   17. Post Card — Base
+   -------------------------------------------------------------------------- */
+
+.mr-post-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition:
+    transform var(--t-slow),
+    border-color var(--t-slow),
+    box-shadow var(--t-slow);
+}
+
+.mr-post-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(191, 162, 106, 0);
+  transition: box-shadow var(--t-slow);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.mr-post-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--c-text-3);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    0 2px 8px rgba(0,0,0,0.3);
+}
+
+.mr-post-card:hover::before {
+  box-shadow: inset 0 0 0 1px rgba(191, 162, 106, 0.18);
+}
+
+
+/* --------------------------------------------------------------------------
+   18. Post Card — Featured (2-col span)
+   -------------------------------------------------------------------------- */
+
+.mr-post-card--featured {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.mr-post-card--featured .mr-post-card__image {
+  aspect-ratio: unset;
+  height: 100%;
+  min-height: 300px;
+}
+
+
+/* --------------------------------------------------------------------------
+   19. Post Card Image
+   -------------------------------------------------------------------------- */
+
+.mr-post-card__image {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  position: relative;
+  background: var(--c-bg-2);
+  flex-shrink: 0;
+}
+
+.mr-post-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.mr-post-card:hover .mr-post-card__image img {
+  transform: scale(1.04);
+}
+
+
+/* --------------------------------------------------------------------------
+   20. Post Card Image Placeholder
+   -------------------------------------------------------------------------- */
+
+.mr-post-card__image--placeholder {
+  background: linear-gradient(135deg, var(--c-bg-2) 0%, var(--c-surface) 50%, #161210 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mr-post-card__image--placeholder::after {
+  content: attr(data-letter);
+  font-family: var(--font-serif);
+  font-size: clamp(4rem, 8vw, 7rem);
+  color: var(--c-text-3);
+  font-style: italic;
+  user-select: none;
+  transition: color var(--t-slow);
+}
+
+.mr-post-card:hover .mr-post-card__image--placeholder::after {
+  color: var(--c-gold-dim);
+}
+
+
+/* --------------------------------------------------------------------------
+   21. Post Card Body
+   -------------------------------------------------------------------------- */
+
+.mr-post-card__body {
+  padding: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--sp-3);
+}
+
+
+/* --------------------------------------------------------------------------
+   22. Post Card Meta (category + reading time)
+   -------------------------------------------------------------------------- */
+
+.mr-post-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+
+/* --------------------------------------------------------------------------
+   23. Post Card Category
+   -------------------------------------------------------------------------- */
+
+.mr-post-card__cat {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  transition: opacity var(--t-base);
+}
+
+.mr-post-card__cat:hover {
+  opacity: 0.75;
+}
+
+
+/* --------------------------------------------------------------------------
+   24. Post Card Reading Time
+   -------------------------------------------------------------------------- */
+
+.mr-post-card__time {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  color: var(--c-text-3);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+
+.mr-post-card__time::before {
+  content: '·';
+  color: var(--c-text-3);
+}
+
+
+/* --------------------------------------------------------------------------
+   25. Post Card Title
+   -------------------------------------------------------------------------- */
+
+.mr-post-card__title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--c-text-1);
+  transition: color var(--t-base);
+}
+
+.mr-post-card:hover .mr-post-card__title {
+  color: var(--c-gold);
+}
+
+
+/* --------------------------------------------------------------------------
+   26. Post Card Subtitle / Excerpt
+   -------------------------------------------------------------------------- */
+
+.mr-post-card__subtitle,
+.mr-post-card__excerpt {
+  font-size: 0.875rem;
+  color: var(--c-text-2);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
+/* --------------------------------------------------------------------------
+   27. Post Card Footer (author + date row)
+   -------------------------------------------------------------------------- */
+
+.mr-post-card__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-top: auto;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--c-border);
+}
+
+
+/* --------------------------------------------------------------------------
+   28. Post Card Avatar
+   -------------------------------------------------------------------------- */
+
+.mr-post-card__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--c-border);
+  flex-shrink: 0;
+}
+
+.mr-post-card__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* --------------------------------------------------------------------------
+   29. Post Card Author Name
+   -------------------------------------------------------------------------- */
+
+.mr-post-card__author-name {
+  font-size: 0.75rem;
+  color: var(--c-text-2);
+  font-weight: 450;
+}
+
+
+/* --------------------------------------------------------------------------
+   30. Post Card Date
+   -------------------------------------------------------------------------- */
+
+.mr-post-card__date {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--c-text-3);
+  letter-spacing: 0.06em;
+  margin-left: auto;
+}
+
+
+/* --------------------------------------------------------------------------
+   31. Pagination
+   -------------------------------------------------------------------------- */
+
+.mr-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding-block: var(--sp-16);
+}
+
+.mr-pagination a,
+.mr-pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding-inline: var(--sp-3);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--c-text-2);
+  transition:
+    border-color var(--t-base),
+    color var(--t-base),
+    background var(--t-base);
+}
+
+.mr-pagination a:hover {
+  border-color: var(--c-gold);
+  color: var(--c-gold);
+}
+
+.mr-pagination .current,
+.mr-pagination span.current {
+  background: var(--c-gold);
+  border-color: var(--c-gold);
+  color: #080808;
+  font-weight: 600;
+}
+
+.mr-pagination .dots {
+  border-color: transparent;
+  color: var(--c-text-3);
+  pointer-events: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   32. No Posts State
+   -------------------------------------------------------------------------- */
+
+.mr-no-posts {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding-block: var(--sp-32);
+  color: var(--c-text-2);
+}
+
+.mr-no-posts__icon {
+  font-family: var(--font-serif);
+  font-size: 4rem;
+  color: var(--c-text-3);
+  display: block;
+  margin-bottom: var(--sp-6);
+  font-style: italic;
+}
+
+.mr-no-posts__title {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  color: var(--c-text-1);
+  margin-bottom: var(--sp-3);
+}
+
+.mr-no-posts__body {
+  font-size: 0.9375rem;
+  color: var(--c-text-2);
+  max-width: 40ch;
+  margin-inline: auto;
+  line-height: 1.65;
+}
+
+
+/* --------------------------------------------------------------------------
+   33. Single Post — Header
+   -------------------------------------------------------------------------- */
+
+.mr-post-header {
+  padding-top: calc(var(--header-h) + var(--sp-16));
+  padding-bottom: var(--sp-12);
+}
+
+.mr-post-header .mr-container--narrow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+
+/* --------------------------------------------------------------------------
+   34. Single Post Header Elements
+   -------------------------------------------------------------------------- */
+
+.mr-post-header__cat {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.mr-post-header__cat::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: var(--c-gold);
+}
+
+.mr-post-header__title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: var(--c-text-1);
+}
+
+.mr-post-header__title em {
+  font-style: italic;
+  color: var(--c-gold);
+}
+
+.mr-post-header__subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--c-text-2);
+  line-height: 1.55;
+  max-width: 58ch;
+  font-weight: 350;
+}
+
+.mr-post-header__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--c-border);
+}
+
+.mr-post-header__author {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.mr-post-header__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--c-border);
+  flex-shrink: 0;
+}
+
+.mr-post-header__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mr-post-header__details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mr-post-header__author-name {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--c-text-1);
+}
+
+.mr-post-header__date {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--c-text-3);
+  letter-spacing: 0.06em;
+}
+
+.mr-post-header__read-time {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--c-text-3);
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.mr-post-header__read-time::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid var(--c-text-3);
+  display: block;
+  flex-shrink: 0;
+}
+
+
+/* --------------------------------------------------------------------------
+   35. Post Hero Image
+   -------------------------------------------------------------------------- */
+
+.mr-post-hero {
+  margin-bottom: var(--sp-12);
+}
+
+.mr-post-hero .mr-container {
+  max-width: 1100px;
+}
+
+.mr-post-hero__img-wrap {
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  aspect-ratio: 16 / 7;
+  background: var(--c-surface);
+}
+
+.mr-post-hero__img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mr-post-hero__caption {
+  margin-top: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--c-text-3);
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+
+/* --------------------------------------------------------------------------
+   36. Post Content Wrap
+   -------------------------------------------------------------------------- */
+
+.mr-post-content-wrap {
+  padding-bottom: var(--sp-20);
+}
+
+.mr-post-content-wrap .mr-container--narrow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-8);
+}
+
+@media (min-width: 1024px) {
+  .mr-post-content-wrap .mr-container--narrow {
+    max-width: 960px;
+    grid-template-columns: 200px 1fr;
+    align-items: start;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   37. Table of Contents
+   -------------------------------------------------------------------------- */
+
+.mr-toc {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5) var(--sp-6);
+}
+
+@media (min-width: 1024px) {
+  .mr-toc {
+    position: sticky;
+    top: calc(var(--header-h) + var(--sp-6));
+  }
+}
+
+.mr-toc__label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  margin-bottom: var(--sp-4);
+  display: block;
+}
+
+.mr-toc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.mr-toc ul li a {
+  font-size: 0.8125rem;
+  color: var(--c-text-2);
+  line-height: 1.4;
+  display: block;
+  padding: 3px 0;
+  border-left: 2px solid transparent;
+  padding-left: var(--sp-3);
+  transition:
+    color var(--t-base),
+    border-color var(--t-base);
+}
+
+.mr-toc ul li a:hover,
+.mr-toc ul li.active a {
+  color: var(--c-text-1);
+  border-left-color: var(--c-gold);
+}
+
+.mr-toc ul ul {
+  padding-left: var(--sp-4);
+  margin-top: var(--sp-1);
+}
+
+.mr-toc ul ul a {
+  font-size: 0.75rem;
+  color: var(--c-text-3);
+}
+
+
+/* --------------------------------------------------------------------------
+   38. Post Content — Editorial Prose
+   -------------------------------------------------------------------------- */
+
+.mr-post-content {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.75;
+  color: var(--c-text-1);
+  min-width: 0;
+}
+
+.mr-post-content > * + * {
+  margin-top: 1.6em;
+}
+
+/* Headings */
+
+.mr-post-content h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+  color: var(--c-text-1);
+  margin-top: 2.5em;
+  margin-bottom: 0.6em;
+}
+
+.mr-post-content h2 em {
+  font-style: italic;
+  color: var(--c-gold);
+}
+
+.mr-post-content h3 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.2rem, 2.2vw, 1.625rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--c-text-1);
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+
+.mr-post-content h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--c-text-1);
+  letter-spacing: 0.01em;
+  margin-top: 1.75em;
+  margin-bottom: 0.4em;
+}
+
+/* Paragraph */
+
+.mr-post-content p {
+  color: rgba(237, 235, 230, 0.88);
+  letter-spacing: 0.005em;
+}
+
+/* Links */
+
+.mr-post-content a {
+  color: var(--c-gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(191, 162, 106, 0.35);
+  transition:
+    color var(--t-base),
+    text-decoration-color var(--t-base);
+}
+
+.mr-post-content a:hover {
+  text-decoration-color: var(--c-gold);
+}
+
+/* Lists */
+
+.mr-post-content ul,
+.mr-post-content ol {
+  padding-left: 1.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45em;
+}
+
+.mr-post-content ul {
+  list-style: none;
+}
+
+.mr-post-content ul li {
+  position: relative;
+  padding-left: 1.25em;
+}
+
+.mr-post-content ul li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--c-gold);
+  font-size: 0.875em;
+}
+
+.mr-post-content ol {
+  list-style: decimal;
+}
+
+.mr-post-content ol li::marker {
+  color: var(--c-gold);
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+/* Blockquote */
+
+.mr-post-content blockquote {
+  margin-block: 2em;
+  padding: var(--sp-6) var(--sp-8);
+  border-left: 3px solid var(--c-gold);
+  background: var(--c-gold-glow);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  position: relative;
+}
+
+.mr-post-content blockquote p {
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 2vw, 1.375rem);
+  font-style: italic;
+  color: var(--c-text-1);
+  line-height: 1.5;
+}
+
+.mr-post-content blockquote cite {
+  display: block;
+  margin-top: var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-text-2);
+  font-style: normal;
+}
+
+/* Inline code */
+
+.mr-post-content code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--c-surface);
+  color: var(--c-gold);
+  padding: 2px 7px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--c-border);
+  white-space: nowrap;
+}
+
+/* Code blocks */
+
+.mr-post-content pre {
+  margin-block: 2em;
+  background: var(--c-bg-2);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-6);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-border) transparent;
+}
+
+.mr-post-content pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+.mr-post-content pre::-webkit-scrollbar-thumb {
+  background: var(--c-border);
+  border-radius: 3px;
+}
+
+.mr-post-content pre code {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  background: none;
+  color: var(--c-text-1);
+  border: none;
+  padding: 0;
+  white-space: pre;
+  letter-spacing: 0;
+}
+
+/* Images */
+
+.mr-post-content img {
+  border-radius: var(--r-lg);
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--c-border);
+}
+
+.mr-post-content figure {
+  margin-block: 2em;
+}
+
+.mr-post-content figcaption {
+  margin-top: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--c-text-3);
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+/* Strong / Em */
+
+.mr-post-content strong {
+  font-weight: 600;
+  color: var(--c-text-1);
+}
+
+.mr-post-content em {
+  font-style: italic;
+  color: var(--c-text-1);
+}
+
+/* HR */
+
+.mr-post-content hr {
+  border: none;
+  border-top: 1px solid var(--c-border);
+  margin-block: 3em;
+}
+
+/* Tables */
+
+.mr-post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin-block: 2em;
+}
+
+.mr-post-content th {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  border-bottom: 1px solid var(--c-border);
+  padding: var(--sp-3) var(--sp-4);
+  text-align: left;
+}
+
+.mr-post-content td {
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--c-border);
+  color: var(--c-text-2);
+  vertical-align: top;
+}
+
+.mr-post-content tr:hover td {
+  color: var(--c-text-1);
+}
+
+
+/* --------------------------------------------------------------------------
+   39. Post Tags
+   -------------------------------------------------------------------------- */
+
+.mr-post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-10);
+  padding-top: var(--sp-8);
+  border-top: 1px solid var(--c-border);
+}
+
+.mr-post-tags__label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-text-3);
+  width: 100%;
+  margin-bottom: var(--sp-2);
+}
+
+
+/* --------------------------------------------------------------------------
+   40. Tag Pills
+   -------------------------------------------------------------------------- */
+
+.mr-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--c-text-2);
+  transition:
+    border-color var(--t-base),
+    color var(--t-base);
+}
+
+.mr-tag-pill:hover {
+  border-color: var(--c-gold);
+  color: var(--c-gold);
+}
+
+
+/* --------------------------------------------------------------------------
+   41. Author Box
+   -------------------------------------------------------------------------- */
+
+.mr-author-box {
+  display: flex;
+  gap: var(--sp-6);
+  align-items: flex-start;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-xl);
+  padding: var(--sp-8);
+  margin-block: var(--sp-12);
+}
+
+.mr-author-box__avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--c-border);
+  flex-shrink: 0;
+  border: 2px solid var(--c-border);
+}
+
+.mr-author-box__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mr-author-box__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.mr-author-box__label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  display: block;
+  margin-bottom: var(--sp-2);
+}
+
+.mr-author-box__name {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--c-text-1);
+  margin-bottom: var(--sp-2);
+}
+
+.mr-author-box__bio {
+  font-size: 0.875rem;
+  color: var(--c-text-2);
+  line-height: 1.65;
+}
+
+
+/* --------------------------------------------------------------------------
+   42. Post Navigation (prev / next)
+   -------------------------------------------------------------------------- */
+
+.mr-post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
+  margin-block: var(--sp-12);
+  padding-block: var(--sp-8);
+  border-top: 1px solid var(--c-border);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.mr-post-nav__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-5);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  transition:
+    border-color var(--t-base),
+    transform var(--t-slow);
+}
+
+.mr-post-nav__item:hover {
+  border-color: var(--c-gold);
+  transform: translateY(-2px);
+}
+
+.mr-post-nav__item--next {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.mr-post-nav__dir {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+}
+
+.mr-post-nav__title {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--c-text-1);
+  line-height: 1.3;
+  transition: color var(--t-base);
+}
+
+.mr-post-nav__item:hover .mr-post-nav__title {
+  color: var(--c-gold);
+}
+
+
+/* --------------------------------------------------------------------------
+   43. Related Posts Section
+   -------------------------------------------------------------------------- */
+
+.mr-related {
+  padding-block: var(--sp-16);
+  border-top: 1px solid var(--c-border);
+}
+
+.mr-related__header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-8);
+}
+
+.mr-related__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+}
+
+.mr-related__title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 400;
+  color: var(--c-text-1);
+  letter-spacing: -0.015em;
+}
+
+
+/* --------------------------------------------------------------------------
+   44. Related Posts Grid
+   -------------------------------------------------------------------------- */
+
+.mr-related__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-5);
+}
+
+
+/* --------------------------------------------------------------------------
+   45. Related Card
+   -------------------------------------------------------------------------- */
+
+.mr-related__card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform var(--t-slow),
+    border-color var(--t-slow);
+}
+
+.mr-related__card:hover {
+  transform: translateY(-3px);
+  border-color: var(--c-text-3);
+}
+
+.mr-related__img {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--c-bg-2);
+}
+
+.mr-related__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 500ms ease;
+}
+
+.mr-related__card:hover .mr-related__img img {
+  transform: scale(1.04);
+}
+
+.mr-related__body {
+  padding: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  flex: 1;
+}
+
+.mr-related__cat {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+}
+
+.mr-related__post-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--c-text-1);
+  transition: color var(--t-base);
+}
+
+.mr-related__card:hover .mr-related__post-title {
+  color: var(--c-gold);
+}
+
+.mr-related__meta {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--c-border);
+}
+
+.mr-related__date {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--c-text-3);
+  letter-spacing: 0.06em;
+}
+
+.mr-related__read {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--c-text-3);
+  margin-left: auto;
+}
+
+
+/* --------------------------------------------------------------------------
+   46. Post CTA Section
+   -------------------------------------------------------------------------- */
+
+.mr-post-cta {
+  background: var(--c-bg-2);
+  border-top: 1px solid var(--c-border);
+  border-bottom: 1px solid var(--c-border);
+  padding-block: var(--sp-20);
+}
+
+
+/* --------------------------------------------------------------------------
+   47. Post CTA Inner (2-col layout)
+   -------------------------------------------------------------------------- */
+
+.mr-post-cta__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-16);
+  align-items: center;
+}
+
+
+/* --------------------------------------------------------------------------
+   48. Post CTA Elements
+   -------------------------------------------------------------------------- */
+
+.mr-post-cta__label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.mr-post-cta__label::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--c-gold);
+}
+
+.mr-post-cta__headline {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--c-text-1);
+  margin-bottom: var(--sp-4);
+}
+
+.mr-post-cta__headline em {
+  font-style: italic;
+  color: var(--c-gold);
+}
+
+.mr-post-cta__sub {
+  font-size: 1rem;
+  color: var(--c-text-2);
+  line-height: 1.65;
+  max-width: 46ch;
+}
+
+.mr-post-cta__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.mr-post-cta__or {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--c-text-3);
+  text-align: center;
+}
+
+.mr-post-cta__form {
+  width: 100%;
+}
+
+
+/* --------------------------------------------------------------------------
+   49. Newsletter Strip
+   -------------------------------------------------------------------------- */
+
+.mr-newsletter-strip {
+  background: var(--c-bg-2);
+  border-top: 1px solid var(--c-border);
+  padding-block: var(--sp-16);
+  position: relative;
+  overflow: hidden;
+}
+
+.mr-newsletter-strip::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--c-gold), transparent);
+}
+
+
+/* --------------------------------------------------------------------------
+   50. Newsletter Strip Inner
+   -------------------------------------------------------------------------- */
+
+.mr-newsletter-strip__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-12);
+  align-items: center;
+}
+
+.mr-newsletter-strip__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.mr-newsletter-strip__label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.mr-newsletter-strip__label::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--c-gold);
+}
+
+.mr-newsletter-strip__title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+  color: var(--c-text-1);
+}
+
+.mr-newsletter-strip__sub {
+  font-size: 0.9375rem;
+  color: var(--c-text-2);
+  line-height: 1.6;
+  max-width: 42ch;
+}
+
+.mr-newsletter-strip__form-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+/* --------------------------------------------------------------------------
+   51. Newsletter Form
+   -------------------------------------------------------------------------- */
+
+.mr-newsletter-form {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: stretch;
+}
+
+.mr-newsletter-input {
+  flex: 1;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 12px 16px;
+  font-size: 0.9375rem;
+  color: var(--c-text-1);
+  outline: none;
+  transition:
+    border-color var(--t-base),
+    box-shadow var(--t-base);
+  min-width: 0;
+}
+
+.mr-newsletter-input::placeholder {
+  color: var(--c-text-3);
+}
+
+.mr-newsletter-input:focus {
+  border-color: var(--c-gold);
+  box-shadow: 0 0 0 3px var(--c-gold-dim);
+}
+
+.mr-newsletter-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  background: var(--c-gold);
+  color: #080808;
+  border-radius: var(--r-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition:
+    background var(--t-base),
+    transform var(--t-base),
+    box-shadow var(--t-base);
+}
+
+.mr-newsletter-btn:hover {
+  background: #d4b87a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(191, 162, 106, 0.25);
+}
+
+.mr-newsletter-btn:active {
+  transform: translateY(0);
+}
+
+
+/* --------------------------------------------------------------------------
+   52. Site Footer
+   -------------------------------------------------------------------------- */
+
+.mr-site-footer {
+  background: var(--c-bg-2);
+  border-top: 1px solid var(--c-border);
+}
+
+.mr-footer-inner {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr;
+  gap: var(--sp-16);
+  padding-block: var(--sp-20);
+  align-items: start;
+}
+
+.mr-footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.mr-footer-tagline {
+  font-size: 0.9rem;
+  color: var(--c-text-2);
+  line-height: 1.7;
+  max-width: 34ch;
+}
+
+.mr-footer-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-8);
+}
+
+.mr-footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.mr-footer-col-title {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  margin-bottom: var(--sp-2);
+}
+
+.mr-footer-col ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  list-style: none;
+}
+
+.mr-footer-col ul li {
+  font-size: 0.875rem;
+  color: var(--c-text-2);
+  line-height: 1.4;
+}
+
+.mr-footer-col ul li a {
+  color: var(--c-text-2);
+  transition: color var(--t-base);
+}
+
+.mr-footer-col ul li a:hover {
+  color: var(--c-text-1);
+}
+
+.mr-footer-col ul li span {
+  color: var(--c-text-3);
+  font-size: 0.8125rem;
+}
+
+.mr-footer-bottom {
+  border-top: 1px solid var(--c-border);
+}
+
+.mr-footer-bottom-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding-block: var(--sp-5);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--c-text-3);
+}
+
+.mr-footer-bottom-inner nav {
+  display: flex;
+  gap: var(--sp-4);
+}
+
+.mr-footer-bottom-inner nav a {
+  color: var(--c-text-3);
+  transition: color var(--t-base);
+}
+
+.mr-footer-bottom-inner nav a:hover {
+  color: var(--c-text-2);
+}
+
+
+/* --------------------------------------------------------------------------
+   53. Breadcrumbs
+   -------------------------------------------------------------------------- */
+
+.mr-breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  padding-block: var(--sp-5);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--c-text-3);
+}
+
+.mr-bc-link {
+  color: var(--c-text-3);
+  transition: color var(--t-base);
+}
+
+.mr-bc-link:hover {
+  color: var(--c-gold);
+}
+
+.mr-bc-sep {
+  color: var(--c-text-3);
+  opacity: 0.5;
+  user-select: none;
+  font-size: 0.75em;
+}
+
+.mr-bc-current {
+  color: var(--c-text-2);
+  font-weight: 500;
+}
+
+
+/* --------------------------------------------------------------------------
+   54. Button — Primary
+   -------------------------------------------------------------------------- */
+
+.mr-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 14px 28px;
+  background: var(--c-gold);
+  color: #080808;
+  border-radius: var(--r-pill);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition:
+    background var(--t-base),
+    transform var(--t-base),
+    box-shadow var(--t-base);
+}
+
+.mr-btn-primary:hover {
+  background: #d4b87a;
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 24px rgba(191, 162, 106, 0.28),
+    0 2px 8px rgba(191, 162, 106, 0.15);
+}
+
+.mr-btn-primary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   55. Button — Ghost
+   -------------------------------------------------------------------------- */
+
+.mr-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 13px 27px;
+  background: transparent;
+  border: 1px solid var(--c-border);
+  color: var(--c-text-1);
+  border-radius: var(--r-pill);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition:
+    border-color var(--t-base),
+    color var(--t-base),
+    background var(--t-base),
+    transform var(--t-base);
+}
+
+.mr-btn-ghost:hover {
+  border-color: var(--c-gold);
+  color: var(--c-gold);
+  transform: translateY(-1px);
+}
+
+.mr-btn-ghost:active {
+  transform: translateY(0);
+}
+
+
+/* --------------------------------------------------------------------------
+   56. Responsive — 1100px (2-col footer collapse)
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .mr-footer-inner {
+    grid-template-columns: 1fr;
+    gap: var(--sp-12);
+  }
+
+  .mr-footer-tagline {
+    max-width: 52ch;
+  }
+
+  .mr-footer-links {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .mr-related__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mr-related__grid .mr-related__card:last-child {
+    display: none;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   57. Responsive — 900px (archive header, post CTA)
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .mr-archive-header .mr-container {
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+  }
+
+  .mr-post-cta__inner {
+    grid-template-columns: 1fr;
+    gap: var(--sp-10);
+  }
+
+  .mr-newsletter-strip__inner {
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+  }
+
+  .mr-post-card--featured {
+    grid-template-columns: 1fr;
+  }
+
+  .mr-post-card--featured .mr-post-card__image {
+    height: auto;
+    min-height: unset;
+  }
+
+  .mr-post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .mr-post-nav__item--next {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .mr-author-box {
+    flex-direction: column;
+  }
+
+  .mr-post-header__read-time {
+    margin-left: 0;
+    width: 100%;
+    margin-top: var(--sp-2);
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   58. Responsive — 768px (mobile nav)
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  :root {
+    --header-h: 60px;
+  }
+
+  .mr-menu-btn {
+    display: flex;
+  }
+
+  .mr-header-nav {
+    position: fixed;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    background: rgba(8, 8, 8, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    padding: var(--sp-4) var(--px) var(--sp-8);
+    border-bottom: 1px solid var(--c-border);
+    transform: translateY(-8px);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform var(--t-slow),
+      opacity var(--t-slow);
+  }
+
+  .mr-header-nav.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mr-header-nav a {
+    font-size: 1.125rem;
+    padding-block: var(--sp-4);
+    width: 100%;
+    border-bottom: 1px solid var(--c-border);
+    color: var(--c-text-1);
+  }
+
+  .mr-header-nav a::after {
+    display: none;
+  }
+
+  .mr-header-cta {
+    display: none;
+  }
+
+  .mr-footer-links {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mr-newsletter-form {
+    flex-direction: column;
+  }
+
+  .mr-newsletter-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mr-related__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mr-related__grid .mr-related__card:not(:first-child) {
+    display: none;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   59. Responsive — 540px (single column grid, small screens)
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 540px) {
+  .mr-posts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mr-post-card--featured {
+    grid-column: auto;
+  }
+
+  .mr-footer-links {
+    grid-template-columns: 1fr;
+  }
+
+  .mr-footer-bottom-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-3);
+  }
+
+  .mr-archive-title {
+    max-width: 100%;
+  }
+
+  .mr-author-box {
+    padding: var(--sp-5);
+    gap: var(--sp-4);
+  }
+
+  .mr-related__grid .mr-related__card {
+    display: flex;
+  }
+
+  .mr-toc {
+    position: static;
+  }
+
+  .mr-post-header__meta {
+    flex-wrap: wrap;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   60. Utility Classes
+   -------------------------------------------------------------------------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.mr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* Focus styles */
+
+:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* Selection */
+
+::selection {
+  background: var(--c-gold-dim);
+  color: var(--c-gold);
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--c-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--c-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c-text-3);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-border) transparent;
+}
