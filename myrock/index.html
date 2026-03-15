@@ -937,12 +937,170 @@
               </svg>
             </a>
             <a href="#contact" class="btn-ghost">Ver todas las opciones <span class="arrow">→</span></a>
+            <a href="../manual-myrock-mail-engine.html" class="btn-ghost product-manual-link" target="_blank" rel="noopener">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+                <rect x="1.5" y="0.5" width="10" height="14" rx="1.2" stroke="#BFA26A" stroke-width="1.2"/>
+                <path d="M4 4.5h7M4 7h7M4 9.5h4.5" stroke="#BFA26A" stroke-width="1.1" stroke-linecap="round"/>
+              </svg>
+              Ver manual del plugin <span class="arrow">→</span>
+            </a>
           </div>
         </div>
 
       </div><!-- /.product-card__layout -->
 
     </div><!-- /.product-card -->
+
+    <!-- ── Screenshots del plugin ── -->
+    <div class="product-screenshots reveal">
+
+      <div class="screenshots-intro">
+        <h3 class="screenshots-title">Así se ve por dentro</h3>
+        <p class="screenshots-sub">Interfaz completa integrada en tu panel de WordPress — sin salir de tu sitio.</p>
+      </div>
+
+      <div class="screenshots-tabs" role="tablist" aria-label="Pantallas del plugin">
+        <button class="screenshot-tab active" data-screen="dashboard" role="tab" aria-selected="true">Dashboard</button>
+        <button class="screenshot-tab" data-screen="campaigns" role="tab" aria-selected="false">Campañas</button>
+        <button class="screenshot-tab" data-screen="contacts" role="tab" aria-selected="false">Contactos</button>
+        <button class="screenshot-tab" data-screen="settings" role="tab" aria-selected="false">Configuración</button>
+      </div>
+
+      <div class="browser-mockup" aria-hidden="true">
+        <!-- Browser chrome -->
+        <div class="browser-bar">
+          <div class="browser-dots">
+            <span class="dot dot-r"></span>
+            <span class="dot dot-y"></span>
+            <span class="dot dot-g"></span>
+          </div>
+          <div class="browser-url" id="browser-url-bar">wp-admin/admin.php?page=mrme-dashboard</div>
+        </div>
+
+        <!-- Browser body: WP sidebar + screen content -->
+        <div class="browser-body">
+
+          <div class="wp-sidebar">
+            <div class="wp-sb-brand"><div class="wp-sb-mark">MR</div><span>Mail Engine</span></div>
+            <ul class="wp-sb-nav">
+              <li class="wp-sb-item" data-for="dashboard">Dashboard</li>
+              <li class="wp-sb-item" data-for="campaigns">Campañas</li>
+              <li class="wp-sb-item" data-for="contacts">Contactos</li>
+              <li class="wp-sb-item-dim">Formularios</li>
+              <li class="wp-sb-item-dim">Listas</li>
+              <li class="wp-sb-item-dim">Automatizaciones</li>
+              <li class="wp-sb-item-dim">Logs</li>
+              <li class="wp-sb-item" data-for="settings">Configuración</li>
+            </ul>
+          </div>
+
+          <div class="wp-screen-wrap">
+
+            <!-- DASHBOARD -->
+            <div class="wp-screen" id="sc-dashboard">
+              <div class="sc-header">
+                <h4 class="sc-title">Dashboard</h4>
+              </div>
+              <div class="sc-stat-grid">
+                <div class="sc-stat"><div class="sc-stat-val">2,847</div><div class="sc-stat-key">Contactos</div><div class="sc-stat-sub pos">+124 este mes</div></div>
+                <div class="sc-stat"><div class="sc-stat-val">38</div><div class="sc-stat-key">Campañas enviadas</div><div class="sc-stat-sub pos">+3 este mes</div></div>
+                <div class="sc-stat"><div class="sc-stat-val">41,290</div><div class="sc-stat-key">Correos enviados</div><div class="sc-stat-sub">acumulado total</div></div>
+                <div class="sc-stat"><div class="sc-stat-val">28.4%</div><div class="sc-stat-key">Tasa de apertura</div><div class="sc-stat-sub pos">+2.1% vs anterior</div></div>
+              </div>
+              <div class="sc-section-label">Campañas recientes</div>
+              <table class="sc-table">
+                <thead><tr><th>Campaña</th><th>Estado</th><th>Enviados</th><th>Apertura</th></tr></thead>
+                <tbody>
+                  <tr><td>Newsletter Mayo 2026</td><td><span class="sc-badge sent">Enviada</span></td><td>1,240</td><td>31.2%</td></tr>
+                  <tr><td>Promo Lanzamiento</td><td><span class="sc-badge sent">Enviada</span></td><td>850</td><td>44.8%</td></tr>
+                  <tr><td>Seguimiento clientes</td><td><span class="sc-badge draft">Borrador</span></td><td>—</td><td>—</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- CAMPAIGNS -->
+            <div class="wp-screen hidden" id="sc-campaigns">
+              <div class="sc-header">
+                <h4 class="sc-title">Campañas</h4>
+                <button class="sc-action-btn">+ Nueva campaña</button>
+              </div>
+              <table class="sc-table">
+                <thead><tr><th>Nombre</th><th>Estado</th><th>Lista</th><th>Enviados</th><th>Apertura</th><th>Fecha</th></tr></thead>
+                <tbody>
+                  <tr><td>Newsletter Mayo 2026</td><td><span class="sc-badge sent">Enviada</span></td><td>Todos</td><td>1,240</td><td>31.2%</td><td>12 May</td></tr>
+                  <tr><td>Promo Lanzamiento</td><td><span class="sc-badge sent">Enviada</span></td><td>VIP</td><td>850</td><td>44.8%</td><td>5 May</td></tr>
+                  <tr><td>Seguimiento clientes</td><td><span class="sc-badge draft">Borrador</span></td><td>Activos</td><td>—</td><td>—</td><td>—</td></tr>
+                  <tr><td>Newsletter Abril</td><td><span class="sc-badge sent">Enviada</span></td><td>Todos</td><td>1,180</td><td>26.5%</td><td>15 Abr</td></tr>
+                  <tr><td>Email de bienvenida</td><td><span class="sc-badge auto">Auto</span></td><td>Nuevos</td><td>247</td><td>58.1%</td><td>Siempre</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- CONTACTS -->
+            <div class="wp-screen hidden" id="sc-contacts">
+              <div class="sc-header">
+                <h4 class="sc-title">Contactos</h4>
+                <button class="sc-action-btn">Importar CSV</button>
+              </div>
+              <div class="sc-filters">
+                <div class="sc-search-mock">Buscar contacto...</div>
+                <span class="sc-filter-pill active">Todos (2,847)</span>
+                <span class="sc-filter-pill">Suscritos (2,710)</span>
+                <span class="sc-filter-pill">Rebotados (41)</span>
+              </div>
+              <table class="sc-table">
+                <thead><tr><th>Nombre</th><th>Email</th><th>Lista</th><th>Estado</th><th>Suscrito</th></tr></thead>
+                <tbody>
+                  <tr><td>Carlos Mendoza</td><td>carlos@empresa.mx</td><td>VIP</td><td><span class="sc-badge ok">Activo</span></td><td>3 Mar 2026</td></tr>
+                  <tr><td>Ana García</td><td>ana@studio.mx</td><td>Todos</td><td><span class="sc-badge ok">Activo</span></td><td>14 Feb 2026</td></tr>
+                  <tr><td>Jesús Torres</td><td>jtorres@co.mx</td><td>Activos</td><td><span class="sc-badge ok">Activo</span></td><td>21 Ene 2026</td></tr>
+                  <tr><td>María López</td><td>maria@mx.com</td><td>Todos</td><td><span class="sc-badge unsub">Baja</span></td><td>5 Dic 2025</td></tr>
+                  <tr><td>Roberto Silva</td><td>r.silva@biz.mx</td><td>VIP</td><td><span class="sc-badge ok">Activo</span></td><td>9 Nov 2025</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- SETTINGS -->
+            <div class="wp-screen hidden" id="sc-settings">
+              <div class="sc-header">
+                <h4 class="sc-title">Configuración SMTP</h4>
+              </div>
+              <div class="sc-settings">
+                <div class="sc-field"><label>Host SMTP</label><div class="sc-input">mail.myrock.com.mx</div></div>
+                <div class="sc-field sc-field-half">
+                  <div><label>Puerto</label><div class="sc-input">587</div></div>
+                  <div><label>Encriptación</label><div class="sc-select">STARTTLS ▾</div></div>
+                </div>
+                <div class="sc-field"><label>Correo remitente</label><div class="sc-input">hola@myrock.com.mx</div></div>
+                <div class="sc-field"><label>Nombre remitente</label><div class="sc-input">MyRock</div></div>
+                <div class="sc-field sc-field-half">
+                  <div><label>Usuario SMTP</label><div class="sc-input">hola@myrock.com.mx</div></div>
+                  <div><label>Autenticación</label><div class="sc-select">LOGIN ▾</div></div>
+                </div>
+                <div class="sc-actions">
+                  <button class="sc-action-btn">Enviar correo de prueba</button>
+                  <button class="sc-action-btn primary">Guardar configuración</button>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /.wp-screen-wrap -->
+        </div><!-- /.browser-body -->
+      </div><!-- /.browser-mockup -->
+
+      <div class="screenshots-manual-cta">
+        <a href="../manual-myrock-mail-engine.html" class="screenshots-manual-link" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <rect x="2" y="1" width="12" height="16" rx="1.5" stroke="#BFA26A" stroke-width="1.5"/>
+            <path d="M5 6h8M5 9h8M5 12h5" stroke="#BFA26A" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+          Ver manual completo del plugin
+          <span class="arrow">→</span>
+        </a>
+        <p class="screenshots-manual-note">Documentación detallada: instalación, configuración SMTP, campañas, automatizaciones y API REST.</p>
+      </div>
+
+    </div><!-- /.product-screenshots -->
 
   </div>
 </section>
@@ -1128,6 +1286,46 @@
       if (icon) icon.textContent = item.open ? '−' : '+';
     });
   });
+
+  // --- Plugin screenshots tabs ---
+  const urlLabels = {
+    dashboard: 'wp-admin/admin.php?page=mrme-dashboard',
+    campaigns: 'wp-admin/admin.php?page=mrme-campaigns',
+    contacts:  'wp-admin/admin.php?page=mrme-contacts',
+    settings:  'wp-admin/admin.php?page=mrme-settings',
+  };
+  const sidebarMap = { dashboard: 0, campaigns: 1, contacts: 2, settings: 7 };
+
+  document.querySelectorAll('.screenshot-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const screen = btn.dataset.screen;
+
+      // Activate tab button
+      document.querySelectorAll('.screenshot-tab').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+
+      // Show/hide screens
+      document.querySelectorAll('.wp-screen').forEach(s => s.classList.add('hidden'));
+      document.getElementById('sc-' + screen)?.classList.remove('hidden');
+
+      // Update URL bar
+      const urlBar = document.getElementById('browser-url-bar');
+      if (urlBar) urlBar.textContent = urlLabels[screen] || '';
+
+      // Update sidebar active item
+      document.querySelectorAll('.wp-sb-item').forEach(item => item.classList.remove('active'));
+      const sidebarItems = document.querySelectorAll('.wp-sb-item');
+      const idx = sidebarMap[screen];
+      if (idx !== undefined && sidebarItems[idx]) sidebarItems[idx].classList.add('active');
+    });
+  });
+
+  // Set initial sidebar active item
+  document.querySelectorAll('.wp-sb-item')[0]?.classList.add('active');
 </script>
 
 </body>
