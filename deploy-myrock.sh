@@ -13,11 +13,8 @@ WEBROOT=""
 if command -v apachectl &>/dev/null; then
   WEBROOT=$(apachectl -S 2>/dev/null \
     | grep -i "DocumentRoot" \
-    | grep -i "myrock\|www\|html" \
     | head -1 \
-    | sed 's/.*DocumentRoot[[:space:]]*//' \
-    | tr -d '"' \
-    | xargs)
+    | grep -oE '/[^"[:space:]]+')
 fi
 
 # Fallback: revisar rutas comunes
