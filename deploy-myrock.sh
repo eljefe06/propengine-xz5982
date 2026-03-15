@@ -8,7 +8,6 @@ NGINX_CONF="/etc/nginx/sites-available/myrock"
 
 echo "==> Desplegando MyRock en $WEBROOT"
 
-# 1. Descargar archivos directamente del repo
 mkdir -p "$WEBROOT"
 
 RAW="https://raw.githubusercontent.com/eljefe06/propengine-xz5982/$BRANCH"
@@ -18,6 +17,15 @@ curl -fsSL "$RAW/myrock/index.html" -o "$WEBROOT/index.html"
 
 echo "    Descargando style.css..."
 curl -fsSL "$RAW/myrock/style.css" -o "$WEBROOT/style.css"
+
+echo "    Descargando producto.html..."
+curl -fsSL "$RAW/myrock/producto.html" -o "$WEBROOT/producto.html"
+
+echo "    Descargando producto.css..."
+curl -fsSL "$RAW/myrock/producto.css" -o "$WEBROOT/producto.css"
+
+echo "    Descargando manual del plugin..."
+curl -fsSL "$RAW/manual-myrock-mail-engine.html" -o "$WEBROOT/manual-myrock-mail-engine.html"
 
 echo "    Estableciendo permisos..."
 chown -R www-data:www-data "$WEBROOT"
