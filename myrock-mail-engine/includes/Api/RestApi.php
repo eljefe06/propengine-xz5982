@@ -209,7 +209,7 @@ class RestApi {
 			);
 		}
 
-		$contact_id = ContactService::create_or_update( $data );
+		$contact_id = ContactService::create( $data );
 
 		if ( ! $contact_id ) {
 			return new WP_Error(
@@ -277,7 +277,7 @@ class RestApi {
 			$data['email'] = is_array( $existing ) ? $existing['email'] : $existing->email;
 		}
 
-		$updated = ContactService::create_or_update( $data );
+		$updated = ContactService::update( $id, $data );
 
 		if ( ! $updated ) {
 			return new WP_Error(

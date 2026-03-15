@@ -167,11 +167,11 @@ class CampaignsPage {
         $page_title = $is_new ? __( 'Create Campaign', 'myrock-mail-engine' ) : __( 'Edit Campaign', 'myrock-mail-engine' );
 
         $campaign_id   = $is_new ? 0 : ( is_array( $campaign ) ? (int) $campaign['id'] : (int) $campaign->id );
-        $name          = $is_new ? '' : ( is_array( $campaign ) ? $campaign['name'] : $campaign->name );
+        $name          = $is_new ? '' : ( is_array( $campaign ) ? $campaign['title'] : $campaign->title );
         $subject       = $is_new ? '' : ( is_array( $campaign ) ? $campaign['subject'] : $campaign->subject );
-        $preview_text  = $is_new ? '' : ( is_array( $campaign ) ? $campaign['preview_text'] : $campaign->preview_text );
-        $body_html     = $is_new ? '' : ( is_array( $campaign ) ? $campaign['body_html'] : $campaign->body_html );
-        $body_text     = $is_new ? '' : ( is_array( $campaign ) ? $campaign['body_text'] : $campaign->body_text );
+        $preview_text  = $is_new ? '' : ( is_array( $campaign ) ? $campaign['preheader'] : $campaign->preheader );
+        $body_html     = $is_new ? '' : ( is_array( $campaign ) ? $campaign['content_html'] : $campaign->content_html );
+        $body_text     = $is_new ? '' : ( is_array( $campaign ) ? $campaign['content_text'] : $campaign->content_text );
         $from_name     = $is_new ? '' : ( is_array( $campaign ) ? $campaign['from_name'] : $campaign->from_name );
         $from_email    = $is_new ? '' : ( is_array( $campaign ) ? $campaign['from_email'] : $campaign->from_email );
         $reply_to      = $is_new ? '' : ( is_array( $campaign ) ? $campaign['reply_to'] : $campaign->reply_to );
@@ -190,7 +190,7 @@ class CampaignsPage {
         echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
         echo '<input type="hidden" name="action" value="mrme_save_campaign">';
         printf( '<input type="hidden" name="campaign_id" value="%d">', $campaign_id );
-        wp_nonce_field( 'mrme_save_campaign' );
+        wp_nonce_field( 'mrme_save_campaign_' . $campaign_id );
 
         echo '<table class="form-table"><tbody>';
 
@@ -329,17 +329,25 @@ class CampaignsPage {
             wp_die( esc_html__( 'You do not have permission to perform this action.', 'myrock-mail-engine' ) );
         }
 
-        check_admin_referer( 'mrme_save_campaign' );
-
         $campaign_id  = isset( $_POST['campaign_id'] ) ? (int) $_POST['campaign_id'] : 0;
-        $name         = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+
+        check_admin_referer( 'mrme_save_campaign_' . $campaign_id );
+        // Support both 'title' (template) and 'name' (fallback inline form).
+        $name         = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) )
+                      : ( isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '' );
         $subject      = isset( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ) : '';
-        $preview_text = isset( $_POST['preview_text'] ) ? sanitize_text_field( wp_unslash( $_POST['preview_text'] ) ) : '';
+        // Support both 'preheader' (template) and 'preview_text' (fallback form).
+        $preview_text = isset( $_POST['preheader'] ) ? sanitize_text_field( wp_unslash( $_POST['preheader'] ) )
+                      : ( isset( $_POST['preview_text'] ) ? sanitize_text_field( wp_unslash( $_POST['preview_text'] ) ) : '' );
         $from_name    = isset( $_POST['from_name'] ) ? sanitize_text_field( wp_unslash( $_POST['from_name'] ) ) : '';
         $from_email   = isset( $_POST['from_email'] ) ? sanitize_email( wp_unslash( $_POST['from_email'] ) ) : '';
         $reply_to     = isset( $_POST['reply_to'] ) ? sanitize_email( wp_unslash( $_POST['reply_to'] ) ) : '';
-        $body_html    = isset( $_POST['body_html'] ) ? wp_kses_post( wp_unslash( $_POST['body_html'] ) ) : '';
-        $body_text    = isset( $_POST['body_text'] ) ? sanitize_textarea_field( wp_unslash( $_POST['body_text'] ) ) : '';
+        // Support both 'content_html' (template) and 'body_html' (fallback form).
+        $body_html    = isset( $_POST['content_html'] ) ? wp_kses_post( wp_unslash( $_POST['content_html'] ) )
+                      : ( isset( $_POST['body_html'] ) ? wp_kses_post( wp_unslash( $_POST['body_html'] ) ) : '' );
+        // Support both 'content_text' (template) and 'body_text' (fallback form).
+        $body_text    = isset( $_POST['content_text'] ) ? sanitize_textarea_field( wp_unslash( $_POST['content_text'] ) )
+                      : ( isset( $_POST['body_text'] ) ? sanitize_textarea_field( wp_unslash( $_POST['body_text'] ) ) : '' );
         $scheduled_at = isset( $_POST['scheduled_at'] ) ? sanitize_text_field( wp_unslash( $_POST['scheduled_at'] ) ) : '';
 
         // List IDs as comma-separated string.
@@ -378,14 +386,14 @@ class CampaignsPage {
         }
 
         $data = [
-            'name'         => $name,
+            'title'        => $name,
             'subject'      => $subject,
-            'preview_text' => $preview_text,
+            'preheader'    => $preview_text,
             'from_name'    => $from_name,
             'from_email'   => $from_email,
             'reply_to'     => $reply_to,
-            'body_html'    => $body_html,
-            'body_text'    => $body_text,
+            'content_html' => $body_html,
+            'content_text' => $body_text,
             'list_ids'     => $list_ids,
             'tag_ids'      => $tag_ids,
             'scheduled_at' => $scheduled_at_mysql ?: null,

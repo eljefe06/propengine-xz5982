@@ -182,9 +182,9 @@ class ContactsPage {
             wp_die( esc_html__( 'You do not have permission to perform this action.', 'myrock-mail-engine' ) );
         }
 
-        check_admin_referer( 'mrme_save_contact' );
-
         $contact_id  = isset( $_POST['contact_id'] ) ? (int) $_POST['contact_id'] : 0;
+
+        check_admin_referer( 'mrme_save_contact_' . $contact_id );
         $email       = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
         $first_name  = isset( $_POST['first_name'] ) ? sanitize_text_field( wp_unslash( $_POST['first_name'] ) ) : '';
         $last_name   = isset( $_POST['last_name'] ) ? sanitize_text_field( wp_unslash( $_POST['last_name'] ) ) : '';

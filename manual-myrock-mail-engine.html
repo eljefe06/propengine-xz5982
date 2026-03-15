@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual de Proceso — MyRock Mail Engine</title>
+  <style>
+    :root {
+      --gold: #BFA26A;
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --text: #e8e8e6;
+      --text-dim: #888;
+      --font-serif: 'Georgia', serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+      --font-mono: 'Courier New', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+    /* Header */
+    .manual-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2rem;
+      margin-bottom: 3rem;
+    }
+    .manual-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .manual-brand-mark {
+      width: 36px; height: 36px;
+      background: var(--gold);
+      color: var(--bg);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem; letter-spacing: 0.05em;
+    }
+    .manual-brand-name { font-weight: 600; font-size: 1rem; }
+    .manual-title {
+      font-family: var(--font-serif);
+      font-size: 2.6rem;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+    .manual-title em { color: var(--gold); font-style: italic; }
+    .manual-meta { color: var(--text-dim); font-size: 0.9rem; }
+    .manual-meta span { margin-right: 1.5rem; }
+    /* TOC */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.75rem;
+      margin-bottom: 3rem;
+    }
+    .toc-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+    }
+    .toc ol {
+      list-style: none;
+      counter-reset: toc;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.35rem 2rem;
+    }
+    .toc ol li {
+      counter-increment: toc;
+    }
+    .toc ol li::before {
+      content: counter(toc, decimal-leading-zero) ". ";
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
+      font-size: 0.8rem;
+    }
+    .toc a { color: var(--text); text-decoration: none; font-size: 0.9rem; }
+    .toc a:hover { color: var(--gold); }
+    /* Section */
+    .section {
+      margin-bottom: 4rem;
+      scroll-margin-top: 2rem;
+    }
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      font-family: var(--font-serif);
+      font-size: 1.9rem;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 2rem 0 0.75rem;
+    }
+    p { color: var(--text); margin-bottom: 1rem; }
+    p.dim { color: var(--text-dim); }
+    /* Steps */
+    .steps { list-style: none; counter-reset: steps; padding: 0; }
+    .step {
+      counter-increment: steps;
+      display: flex;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0;
+      width: 32px; height: 32px;
+      background: rgba(191,162,106,0.1);
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .step-num::before { content: counter(steps); }
+    .step-body {}
+    .step-title { font-weight: 600; color: var(--text); margin-bottom: 0.35rem; }
+    .step-desc { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; }
+    /* Screenshot placeholder */
+    .screenshot {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 0.5rem;
+      padding: 2rem;
+      margin: 1rem 0 1.5rem;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+    .screenshot-label {
+      display: inline-block;
+      background: var(--border);
+      padding: 0.2rem 0.7rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+    /* Note / tip */
+    .note {
+      background: rgba(191,162,106,0.07);
+      border-left: 3px solid var(--gold);
+      padding: 0.85rem 1rem;
+      border-radius: 0 0.4rem 0.4rem 0;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+    .note strong { color: var(--gold); }
+    /* Code */
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.1em 0.4em;
+      color: var(--gold);
+    }
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: #c8c8c0;
+    }
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem;
+      font-size: 0.9rem;
+    }
+    th {
+      text-align: left;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    /* Feature pills */
+    .pill {
+      display: inline-block;
+      background: rgba(191,162,106,0.1);
+      border: 1px solid rgba(191,162,106,0.3);
+      color: var(--gold);
+      font-size: 0.75rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      margin: 0.15rem;
+    }
+    /* Divider */
+    hr { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+    /* Footer */
+    .manual-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    @media print {
+      body { background: white; color: black; }
+      .page { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Header ────────────────────────────────────────── -->
+  <header class="manual-header">
+    <div class="manual-brand">
+      <div class="manual-brand-mark">MR</div>
+      <span class="manual-brand-name">MyRock · Documentación</span>
+    </div>
+    <h1 class="manual-title">Manual de Proceso<br><em>MyRock Mail Engine</em></h1>
+    <div class="manual-meta">
+      <span>Versión 1.0.0</span>
+      <span>Marzo 2026</span>
+      <span>WordPress 6.0+</span>
+    </div>
+  </header>
+
+  <!-- ── TOC ───────────────────────────────────────────── -->
+  <nav class="toc" aria-label="Contenido">
+    <div class="toc-title">Tabla de contenido</div>
+    <ol>
+      <li><a href="#intro">Introducción al plugin</a></li>
+      <li><a href="#install">Instalación y activación</a></li>
+      <li><a href="#contacts">Gestión de contactos</a></li>
+      <li><a href="#lists">Listas de suscriptores</a></li>
+      <li><a href="#campaigns">Creación de campañas</a></li>
+      <li><a href="#send">Envío de correos</a></li>
+      <li><a href="#automations">Automatizaciones</a></li>
+      <li><a href="#forms">Formularios de suscripción</a></li>
+      <li><a href="#reports">Reportes y analítica</a></li>
+      <li><a href="#settings">Configuración SMTP</a></li>
+    </ol>
+  </nav>
+
+
+  <!-- ── 01 Introducción ──────────────────────────────── -->
+  <section id="intro" class="section">
+    <div class="section-label">01 · Introducción</div>
+    <h2>¿Qué es MyRock Mail Engine?</h2>
+    <p>
+      <strong>MyRock Mail Engine</strong> es un plugin de WordPress desarrollado por MyRock que
+      te permite gestionar toda tu estrategia de email marketing directamente desde el panel de
+      administración de tu sitio. Sin plataformas externas, sin costos mensuales de terceros —
+      todo en tu propio servidor.
+    </p>
+
+    <h3>Módulos principales</h3>
+    <table>
+      <thead>
+        <tr><th>Módulo</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Contactos</strong></td><td>Base de datos de suscriptores con estados, etiquetas e historial.</td></tr>
+        <tr><td><strong>Listas</strong></td><td>Organización de contactos en grupos para segmentar envíos.</td></tr>
+        <tr><td><strong>Campañas</strong></td><td>Editor HTML para crear y programar correos masivos.</td></tr>
+        <tr><td><strong>Automatizaciones</strong></td><td>Flujos de correo disparados por eventos (suscripción, clic, fecha).</td></tr>
+        <tr><td><strong>Formularios</strong></td><td>Formularios de suscripción incrustables con shortcode.</td></tr>
+        <tr><td><strong>Reportes</strong></td><td>Métricas de aperturas, clics, rebotes y cancelaciones por campaña.</td></tr>
+        <tr><td><strong>Configuración</strong></td><td>SMTP personalizado, remitente predeterminado, doble opt-in global.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Merge tags disponibles</h3>
+    <p>Usa estas etiquetas en el asunto y cuerpo de tus campañas para personalizar cada correo:</p>
+    <p>
+      <span class="pill">{{first_name}}</span>
+      <span class="pill">{{last_name}}</span>
+      <span class="pill">{{email}}</span>
+      <span class="pill">{{unsubscribe_url}}</span>
+      <span class="pill">{{site_name}}</span>
+    </p>
+  </section>
+
+
+  <!-- ── 02 Instalación ───────────────────────────────── -->
+  <section id="install" class="section">
+    <div class="section-label">02 · Instalación</div>
+    <h2>Instalación y activación del plugin</h2>
+
+    <ol class="steps">
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Acceder al panel de WordPress</div>
+          <div class="step-desc">Inicia sesión en <code>tudominio.com/wp-admin</code> con tu usuario administrador.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Ir a Plugins → Añadir nuevo → Subir plugin</div>
+          <div class="step-desc">En el menú lateral ve a <strong>Plugins → Añadir nuevo</strong> y haz clic en el botón <em>"Subir plugin"</em> en la parte superior.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Seleccionar el archivo ZIP</div>
+          <div class="step-desc">Haz clic en <em>"Elegir archivo"</em>, selecciona <code>myrock-mail-engine.zip</code> desde tu computadora y presiona <em>"Instalar ahora"</em>.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Activar el plugin</div>
+          <div class="step-desc">Una vez instalado, haz clic en <em>"Activar plugin"</em>. WordPress creará automáticamente las 10 tablas necesarias en la base de datos.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Verificar el menú lateral</div>
+          <div class="step-desc">Deberás ver en el menú: <strong>Mail Engine → Dashboard, Contacts, Lists, Campaigns, Automations, Forms, Logs, Settings</strong>.</div>
+        </div>
+      </li>
+    </ol>
+
+    <div class="note">
+      <strong>Nota:</strong> El plugin crea automáticamente una lista predeterminada ("Lista principal") y una automatización de bienvenida al activarse por primera vez.
+    </div>
+  </section>
+
+
+  <!-- ── 03 Contactos ─────────────────────────────────── -->
+  <section id="contacts" class="section">
+    <div class="section-label">03 · Contactos</div>
+    <h2>Gestión de contactos</h2>
+    <p>Los contactos son el núcleo del sistema. Cada contacto tiene: email, nombre, apellido, teléfono, empresa, estado y notas.</p>
+
+    <h3>Agregar un contacto manualmente</h3>
+    <ol class="steps">
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Ir a Mail Engine → Contacts</div>
+          <div class="step-desc">Haz clic en <em>"Add New"</em> (o "Añadir contacto") en la parte superior de la lista.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Llenar el formulario</div>
+          <div class="step-desc">Ingresa al menos el email (obligatorio). Los campos de nombre, apellido, empresa y teléfono son opcionales pero recomendados para personalización.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Asignar a una lista</div>
+          <div class="step-desc">En la sección <em>"Subscribe to lists"</em>, selecciona las listas a las que deseas agregar el contacto.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Guardar</div>
+          <div class="step-desc">Haz clic en <em>"Save Contact"</em>. El estado del contacto se establecerá como "subscribed" por defecto.</div>
+        </div>
+      </li>
+    </ol>
+
+    <h3>Estados de contacto</h3>
+    <table>
+      <thead><tr><th>Estado</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td><code>subscribed</code></td><td>Activo, recibirá campañas normalmente.</td></tr>
+        <tr><td><code>unsubscribed</code></td><td>Se canceló manualmente — no recibe correos.</td></tr>
+        <tr><td><code>pending</code></td><td>Pendiente de confirmar (double opt-in activo).</td></tr>
+        <tr><td><code>bounced</code></td><td>Email inválido — rebotó en un envío anterior.</td></tr>
+        <tr><td><code>complained</code></td><td>Marcó como spam — automáticamente excluido.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>CSV:</strong> También puedes importar contactos masivamente desde un archivo CSV. Ve a <em>Mail Engine → Contacts → Import</em> y sigue las instrucciones de mapeo de columnas.
+    </div>
+  </section>
+
+
+  <!-- ── 04 Listas ─────────────────────────────────────── -->
+  <section id="lists" class="section">
+    <div class="section-label">04 · Listas</div>
+    <h2>Administración de listas</h2>
+    <p>Las listas permiten segmentar tu audiencia para enviar campañas específicas a grupos concretos.</p>
+
+    <ol class="steps">
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Ir a Mail Engine → Lists → Add New</div>
+          <div class="step-desc">Cada lista requiere un nombre único. El slug se genera automáticamente.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Configurar visibilidad</div>
+          <div class="step-desc">Activa <em>"Public"</em> si deseas que los visitantes puedan suscribirse a esta lista mediante un formulario público. Desactívala para listas internas.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Agregar descripción (opcional)</div>
+          <div class="step-desc">La descripción se puede mostrar en los formularios de suscripción para explicar al usuario de qué trata la lista.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Guardar y asignar contactos</div>
+          <div class="step-desc">Desde la vista de cada contacto puedes asignarlo a múltiples listas. Un contacto puede pertenecer a tantas listas como necesites.</div>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+
+  <!-- ── 05 Campañas ──────────────────────────────────── -->
+  <section id="campaigns" class="section">
+    <div class="section-label">05 · Campañas</div>
+    <h2>Creación de una campaña de email</h2>
+
+    <ol class="steps">
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Mail Engine → Campaigns → Create Campaign</div>
+          <div class="step-desc">Haz clic en el botón <em>"+ New Campaign"</em> para abrir el editor.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Llenar los datos básicos</div>
+          <div class="step-desc">
+            <strong>Campaign Title:</strong> nombre interno (no visible para el suscriptor).<br>
+            <strong>Email Subject:</strong> asunto del correo que verá el destinatario — aquí puedes usar <code>{{first_name}}</code>.<br>
+            <strong>Preheader Text:</strong> texto de vista previa que aparece en el inbox antes de abrir.
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Configurar el remitente</div>
+          <div class="step-desc">
+            <strong>From Name:</strong> nombre que aparece como remitente.<br>
+            <strong>From Email:</strong> dirección de envío (debe estar verificada en tu servidor SMTP).<br>
+            <strong>Reply-To:</strong> a dónde van las respuestas.
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Escribir el contenido HTML</div>
+          <div class="step-desc">Usa el editor visual integrado (TinyMCE) para crear el cuerpo del correo. Puedes alternar a modo HTML puro. Incluye siempre <code>{{unsubscribe_url}}</code> al final para cumplir con la ley CAN-SPAM / GDPR.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Seleccionar listas de destinatarios</div>
+          <div class="step-desc">En el panel lateral derecho, marca las listas que recibirán esta campaña. Opcionalmente, filtra por etiquetas para una segmentación más precisa.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Guardar como borrador o programar</div>
+          <div class="step-desc">
+            Haz clic en <em>"Save Draft"</em> para guardar sin enviar.<br>
+            O elige una fecha/hora en el campo <em>"Schedule"</em> y presiona <em>"Send Now"</em> para envío inmediato.
+          </div>
+        </div>
+      </li>
+    </ol>
+
+    <div class="note">
+      <strong>Prueba de envío:</strong> Antes de enviar masivamente, usa la sección <em>"Send Test Email"</em> en la parte inferior de la campaña para verificar que el correo se ve bien en tu inbox.
+    </div>
+
+    <h3>Ejemplo de campaña real (caso de uso)</h3>
+    <table>
+      <thead><tr><th>Campo</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Campaign Title</td><td>Lanzamiento MyRock Mail Engine — Q2 2026</td></tr>
+        <tr><td>Subject</td><td>🚀 Presentamos MyRock Mail Engine</td></tr>
+        <tr><td>Preheader</td><td>Conoce la herramienta de email marketing para WordPress</td></tr>
+        <tr><td>From Name</td><td>Jorge Yanagui — MyRock</td></tr>
+        <tr><td>From Email</td><td>jorge.yanagui@gmail.com</td></tr>
+        <tr><td>Listas</td><td>Clientes MyRock 2026 (4 contactos)</td></tr>
+        <tr><td>Destinatarios</td><td>mmorales@ozmedios.com, jorge.yanagui@gmail.com, rubieranaibi@gmail.com, y0orsh@gmail.com</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+
+  <!-- ── 06 Envío ──────────────────────────────────────── -->
+  <section id="send" class="section">
+    <div class="section-label">06 · Envío</div>
+    <h2>Proceso de envío de correos</h2>
+
+    <h3>Envío inmediato</h3>
+    <p>Desde la pantalla de edición de una campaña en estado <code>draft</code>, haz clic en <em>"Send Now"</em>. WordPress confirmará el número de destinatarios antes de proceder.</p>
+
+    <h3>Envío programado</h3>
+    <p>Selecciona una fecha y hora en el campo <em>"Schedule"</em> y guarda. El plugin usará WP-Cron para despachar los correos en el momento indicado. Asegúrate de que WP-Cron esté activo en tu instalación.</p>
+
+    <h3>Ciclo de vida de un envío</h3>
+    <table>
+      <thead><tr><th>Estado</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><code>draft</code></td><td>Campaña guardada, aún no enviada.</td></tr>
+        <tr><td><code>scheduled</code></td><td>Programada para envío futuro.</td></tr>
+        <tr><td><code>sending</code></td><td>En proceso de envío masivo.</td></tr>
+        <tr><td><code>sent</code></td><td>Envío completado — estadísticas disponibles.</td></tr>
+        <tr><td><code>cancelled</code></td><td>Cancelada manualmente antes de enviarse.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>Logs:</strong> Cada envío individual queda registrado en <em>Mail Engine → Logs</em>. Puedes ver qué correos se enviaron, cuáles fallaron y el error específico para diagnóstico.
+    </div>
+  </section>
+
+
+  <!-- ── 07 Automatizaciones ──────────────────────────── -->
+  <section id="automations" class="section">
+    <div class="section-label">07 · Automatizaciones</div>
+    <h2>Configuración de automatizaciones</h2>
+    <p>Las automatizaciones envían correos de manera automática cuando ocurre un evento específico, sin intervención manual.</p>
+
+    <h3>Tipos de disparadores (triggers)</h3>
+    <table>
+      <thead><tr><th>Trigger</th><th>Cuándo se activa</th></tr></thead>
+      <tbody>
+        <tr><td><code>subscribe</code></td><td>Cuando un contacto se suscribe a una lista.</td></tr>
+        <tr><td><code>unsubscribe</code></td><td>Cuando un contacto cancela su suscripción.</td></tr>
+        <tr><td><code>tag_added</code></td><td>Cuando se asigna una etiqueta específica.</td></tr>
+        <tr><td><code>date_anniversary</code></td><td>Aniversario de suscripción.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Pasos disponibles en un flujo</h3>
+    <table>
+      <thead><tr><th>Tipo</th><th>Acción</th></tr></thead>
+      <tbody>
+        <tr><td><code>email</code></td><td>Enviar un correo personalizado.</td></tr>
+        <tr><td><code>wait</code></td><td>Esperar X minutos / horas / días antes del siguiente paso.</td></tr>
+        <tr><td><code>condition</code></td><td>Bifurcar el flujo según condición (apertura, clic, etiqueta).</td></tr>
+        <tr><td><code>tag</code></td><td>Agregar una etiqueta al contacto.</td></tr>
+        <tr><td><code>untag</code></td><td>Quitar una etiqueta al contacto.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Automatización predeterminada: Correo de bienvenida</h3>
+    <p>El plugin incluye de fábrica una automatización de bienvenida activa:</p>
+    <ul style="list-style:disc;padding-left:1.5rem;color:var(--text-dim);font-size:0.9rem;">
+      <li>Trigger: <code>subscribe</code></li>
+      <li>Paso 1: Esperar 0 minutos</li>
+      <li>Paso 2: Enviar correo de bienvenida con nombre del sitio</li>
+    </ul>
+
+    <div class="note">
+      <strong>Para personalizar:</strong> Ve a <em>Mail Engine → Automations</em>, selecciona la automatización de bienvenida y edita el contenido HTML del correo, el asunto y el remitente.
+    </div>
+  </section>
+
+
+  <!-- ── 08 Formularios ───────────────────────────────── -->
+  <section id="forms" class="section">
+    <div class="section-label">08 · Formularios</div>
+    <h2>Formularios de suscripción</h2>
+    <p>Crea formularios que los visitantes pueden usar para suscribirse directamente desde cualquier página o entrada de tu sitio.</p>
+
+    <ol class="steps">
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Crear el formulario</div>
+          <div class="step-desc">Ve a <em>Mail Engine → Forms → Add New</em>. Define los campos: al menos <code>email</code> es requerido.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Asignar a listas</div>
+          <div class="step-desc">Selecciona a cuál o cuáles listas se agregarán los nuevos suscriptores que completen este formulario.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Configurar double opt-in (opcional)</div>
+          <div class="step-desc">Activa <em>"Double Opt-In"</em> para enviar un correo de confirmación antes de añadir al contacto a la lista. Recomendado para cumplir con GDPR.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Incrustar en tu sitio con shortcode</div>
+          <div class="step-desc">Copia el shortcode <code>[mrme_form id="<strong>N</strong>"]</code> (donde <strong>N</strong> es el ID del formulario) y pégalo en cualquier página, entrada o widget.</div>
+        </div>
+      </li>
+    </ol>
+
+    <pre>[mrme_form id="1"]</pre>
+  </section>
+
+
+  <!-- ── 09 Reportes ──────────────────────────────────── -->
+  <section id="reports" class="section">
+    <div class="section-label">09 · Reportes</div>
+    <h2>Reportes y analítica</h2>
+    <p>Una vez que una campaña ha sido enviada, puedes revisar las métricas detalladas desde dos lugares:</p>
+
+    <h3>Dashboard principal</h3>
+    <p>Ve a <em>Mail Engine → Dashboard</em> para ver el resumen global: total de contactos, campañas enviadas, tasa de apertura promedio y actividad reciente.</p>
+
+    <h3>Estadísticas por campaña</h3>
+    <p>Abre cualquier campaña con status <code>sent</code> y desplázate hasta la sección <em>"Campaign Stats"</em>:</p>
+    <table>
+      <thead><tr><th>Métrica</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>Sent</td><td>Total de correos despachados.</td></tr>
+        <tr><td>Opens</td><td>Número de aperturas únicas (con pixel de tracking).</td></tr>
+        <tr><td>Clicks</td><td>Clics en enlaces dentro del correo.</td></tr>
+        <tr><td>Bounces</td><td>Correos rechazados por el servidor destino.</td></tr>
+        <tr><td>Unsubscribes</td><td>Contactos que cancelaron su suscripción desde este envío.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Log de envíos</h3>
+    <p>En <em>Mail Engine → Logs</em> puedes ver el detalle de cada envío individual: fecha, destinatario, estado y errores.</p>
+  </section>
+
+
+  <!-- ── 10 SMTP ───────────────────────────────────────── -->
+  <section id="settings" class="section">
+    <div class="section-label">10 · Configuración</div>
+    <h2>Configuración de SMTP</h2>
+    <p>Por defecto, el plugin usa la función <code>wp_mail()</code> de WordPress. Para mayor entregabilidad, configura un servidor SMTP externo.</p>
+
+    <ol class="steps">
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Ir a Mail Engine → Settings</div>
+          <div class="step-desc">Aquí encontrarás todos los parámetros de envío globales.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Configurar el remitente predeterminado</div>
+          <div class="step-desc">Define el <em>From Name</em> y <em>From Email</em> que se usarán en todas las campañas a menos que se sobreescriban en cada una.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Habilitar SMTP personalizado</div>
+          <div class="step-desc">
+            Activa la opción <em>"Use SMTP"</em> e ingresa:<br>
+            • <strong>Host:</strong> servidor SMTP (ej. <code>smtp.gmail.com</code>)<br>
+            • <strong>Port:</strong> 587 (TLS) o 465 (SSL)<br>
+            • <strong>Username</strong> y <strong>Password</strong> del servicio de correo.
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <div class="step-title">Enviar correo de prueba</div>
+          <div class="step-desc">Usa el botón <em>"Send Test Email"</em> en la página de configuración para verificar que la conexión SMTP funciona correctamente antes de enviar campañas reales.</div>
+        </div>
+      </li>
+    </ol>
+
+    <h3>Proveedores SMTP recomendados</h3>
+    <table>
+      <thead><tr><th>Proveedor</th><th>Plan gratuito</th><th>Correos/día</th></tr></thead>
+      <tbody>
+        <tr><td>SendGrid</td><td>Sí</td><td>100/día</td></tr>
+        <tr><td>Brevo (Sendinblue)</td><td>Sí</td><td>300/día</td></tr>
+        <tr><td>Amazon SES</td><td>Prueba 62k/mes</td><td>Alto volumen</td></tr>
+        <tr><td>Mailgun</td><td>Trial 30 días</td><td>5,000/mes</td></tr>
+        <tr><td>Gmail SMTP</td><td>Sí (personal)</td><td>500/día</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+
+  <hr>
+
+  <!-- ── Footer ────────────────────────────────────────── -->
+  <footer class="manual-footer">
+    <span>© 2026 MyRock · Culiacán, Sinaloa · myrock.com.mx</span>
+    <span>MyRock Mail Engine v1.0.0 · Documentación interna</span>
+  </footer>
+
+</div><!-- /.page -->
+</body>
+</html>
