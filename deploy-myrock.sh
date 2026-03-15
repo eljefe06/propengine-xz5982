@@ -5,7 +5,7 @@ BRANCH="claude/install-google-stitch-mcp-zt9ob"
 RAW="https://raw.githubusercontent.com/eljefe06/propengine-xz5982/$BRANCH"
 
 # Permite override: WEBROOT=/otra/ruta bash deploy-myrock.sh
-WEBROOT="${WEBROOT:-/var/www/html}"
+WEBROOT="${WEBROOT:-/var/www/myrock}"
 
 echo "==> Desplegando MyRock en $WEBROOT"
 mkdir -p "$WEBROOT"
