@@ -26,6 +26,15 @@ echo "==> Desplegando CSS..."
 cp "$TMPDIR/repo/myrock/style.css"    "$WEBROOT/style.css"    && echo "    ✓ style.css"
 cp "$TMPDIR/repo/myrock/producto.css" "$WEBROOT/producto.css" && echo "    ✓ producto.css"
 
+# ─── Plugin MyRock Mail Engine ───────────────────────────────────────────────
+echo ""
+echo "==> Desplegando plugin MyRock Mail Engine..."
+PLUGIN_DST="$WEBROOT/wp-content/plugins/myrock-mail-engine"
+mkdir -p "$PLUGIN_DST"
+rsync -a --delete "$TMPDIR/repo/myrock-mail-engine/" "$PLUGIN_DST/"
+chown -R www-data:www-data "$PLUGIN_DST" 2>/dev/null || true
+echo "    ✓ Plugin sincronizado en $PLUGIN_DST"
+
 # ─── Eliminar HTML estáticos — WordPress maneja el contenido ahora ────────────
 echo ""
 echo "==> Limpiando archivos HTML estáticos (WordPress toma el control)..."

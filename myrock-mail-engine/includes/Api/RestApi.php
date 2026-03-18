@@ -167,19 +167,19 @@ class RestApi {
 		$status   = sanitize_key( $r->get_param( 'status' ) ?: '' );
 		$list_id  = (int) ( $r->get_param( 'list_id' ) ?: 0 );
 
-		$query_args = [
-			'per_page' => $per_page,
-			'page'     => $page,
-			'search'   => $search,
-			'status'   => $status,
-			'list_id'  => $list_id,
+		$filter_args = [
+			'search'  => $search,
+			'status'  => $status,
+			'list_id' => $list_id,
 		];
 
-		$result = Contact::query( $query_args );
+		$contacts = Contact::all( array_merge( $filter_args, [
+			'limit'  => $per_page,
+			'offset' => ( $page - 1 ) * $per_page,
+		] ) );
 
-		$contacts = isset( $result['items'] ) ? $result['items'] : ( $result['data'] ?? [] );
-		$total    = isset( $result['total'] ) ? (int) $result['total'] : count( $contacts );
-		$pages    = $per_page > 0 ? (int) ceil( $total / $per_page ) : 1;
+		$total = Contact::count( $filter_args );
+		$pages = $per_page > 0 ? (int) ceil( $total / $per_page ) : 1;
 
 		return new WP_REST_Response(
 			[
@@ -364,9 +364,12 @@ class RestApi {
 			'status'   => $status,
 		];
 
-		$result    = Campaign::query( $args );
-		$campaigns = isset( $result['items'] ) ? $result['items'] : ( $result['data'] ?? [] );
-		$total     = isset( $result['total'] ) ? (int) $result['total'] : count( $campaigns );
+		$campaigns = Campaign::all( [
+			'status' => $status,
+			'limit'  => $per_page,
+			'offset' => ( $page - 1 ) * $per_page,
+		] );
+		$total     = Campaign::count( [ 'status' => $status ] );
 		$pages     = $per_page > 0 ? (int) ceil( $total / $per_page ) : 1;
 
 		return new WP_REST_Response(
