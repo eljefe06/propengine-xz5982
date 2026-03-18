@@ -3,7 +3,7 @@
  * Plugin Name:       MyRock Mail Engine
  * Plugin URI:        https://myrock.com.mx
  * Description:       Email marketing y gestión de contactos profesional para WordPress. Standalone, portable y listo para escalar.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            MyRock
@@ -19,8 +19,8 @@
 defined( 'ABSPATH' ) || exit;
 
 // Plugin constants
-define( 'MRME_VERSION',     '1.0.0' );
-define( 'MRME_DB_VERSION',  '1.0.0' );
+define( 'MRME_VERSION',     '1.0.1' );
+define( 'MRME_DB_VERSION',  '1.0.1' );
 define( 'MRME_FILE',        __FILE__ );
 define( 'MRME_DIR',         plugin_dir_path( __FILE__ ) );
 define( 'MRME_URL',         plugin_dir_url( __FILE__ ) );
