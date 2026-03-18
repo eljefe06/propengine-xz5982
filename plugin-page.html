@@ -1,0 +1,313 @@
+<!-- wp:html -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=DM+Mono&display=swap');
+
+.mrls-page { font-family:'Inter',sans-serif; color:#0F172A; background:#fff; max-width:1100px; margin:0 auto; padding:0 24px 80px; }
+
+/* ── Hero ── */
+.mrls-hero { text-align:center; padding:80px 0 60px; }
+.mrls-hero__badge { display:inline-flex; align-items:center; gap:8px; background:#EFF6FF; color:#1B2980; border:1px solid #BFDBFE; border-radius:100px; padding:6px 16px; font-size:13px; font-weight:600; margin-bottom:28px; }
+.mrls-hero__title { font-family:'Instrument Serif',serif; font-size:clamp(36px,5vw,60px); line-height:1.15; margin:0 0 20px; }
+.mrls-hero__title em { font-style:italic; color:#1B2980; }
+.mrls-hero__sub { font-size:18px; color:#475569; max-width:580px; margin:0 auto 40px; line-height:1.6; }
+
+/* ── Feature list ── */
+.mrls-features { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; margin:60px 0; }
+.mrls-feature { background:#F8FAFF; border:1px solid #DBEAFE; border-radius:12px; padding:28px; }
+.mrls-feature__icon { font-size:28px; margin-bottom:12px; }
+.mrls-feature__title { font-weight:700; font-size:16px; margin:0 0 8px; }
+.mrls-feature__desc { font-size:14px; color:#475569; line-height:1.6; margin:0; }
+
+/* ── Comparación ── */
+.mrls-compare { margin:60px 0; }
+.mrls-compare__title { font-family:'Instrument Serif',serif; font-size:32px; text-align:center; margin-bottom:36px; }
+.mrls-table { width:100%; border-collapse:collapse; border:1px solid #DBEAFE; border-radius:12px; overflow:hidden; }
+.mrls-table th { background:#1B2980; color:#fff; padding:16px 20px; text-align:center; font-size:14px; font-weight:600; }
+.mrls-table th:first-child { text-align:left; background:#0F172A; }
+.mrls-table td { padding:14px 20px; border-bottom:1px solid #EFF6FF; font-size:14px; }
+.mrls-table tr:last-child td { border-bottom:none; }
+.mrls-table td:not(:first-child) { text-align:center; }
+.mrls-table tr:nth-child(even) td { background:#F8FAFF; }
+.mrls-check { color:#16a34a; font-size:18px; }
+.mrls-cross { color:#9CA3AF; font-size:18px; }
+.mrls-limit { color:#d97706; font-size:13px; }
+
+/* ── Pricing ── */
+.mrls-pricing { margin:60px 0; }
+.mrls-pricing__header { text-align:center; margin-bottom:40px; }
+.mrls-pricing__title { font-family:'Instrument Serif',serif; font-size:32px; margin:0 0 12px; }
+.mrls-pricing__sub { color:#475569; font-size:16px; margin:0 0 28px; }
+
+/* Toggle */
+.mrls-toggle { display:inline-flex; background:#F1F5F9; border-radius:100px; padding:4px; gap:4px; }
+.mrls-toggle__btn { border:none; background:transparent; padding:8px 24px; border-radius:100px; font-size:14px; font-weight:600; cursor:pointer; transition:.2s; color:#475569; }
+.mrls-toggle__btn.active { background:#1B2980; color:#fff; }
+.mrls-save-badge { display:inline-block; background:#DCFCE7; color:#16a34a; font-size:12px; font-weight:700; padding:2px 10px; border-radius:100px; margin-left:8px; }
+
+/* Cards */
+.mrls-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; max-width:760px; margin:36px auto 0; }
+.mrls-card { border:2px solid #DBEAFE; border-radius:16px; padding:36px 32px; position:relative; }
+.mrls-card--pro { border-color:#1B2980; background:linear-gradient(135deg,#1B2980 0%,#2563EB 100%); color:#fff; }
+.mrls-card__badge { position:absolute; top:-14px; left:50%; transform:translateX(-50%); background:#06B6D4; color:#fff; font-size:12px; font-weight:700; padding:4px 16px; border-radius:100px; white-space:nowrap; }
+.mrls-card__plan { font-size:13px; font-weight:600; opacity:.7; text-transform:uppercase; letter-spacing:.05em; margin:0 0 8px; }
+.mrls-card__price { font-size:48px; font-weight:800; margin:0; line-height:1; }
+.mrls-card__price span { font-size:18px; font-weight:500; opacity:.7; }
+.mrls-card__period { font-size:14px; opacity:.6; margin:4px 0 24px; }
+.mrls-card__features { list-style:none; padding:0; margin:0 0 32px; font-size:14px; }
+.mrls-card__features li { padding:6px 0; display:flex; gap:10px; align-items:flex-start; }
+.mrls-card__features li::before { content:'✓'; font-weight:700; flex-shrink:0; }
+.mrls-card--free .mrls-card__features li::before { color:#16a34a; }
+.mrls-card--pro .mrls-card__features li::before { color:#7DD3FC; }
+.mrls-btn { display:block; width:100%; padding:14px; border-radius:10px; font-size:15px; font-weight:700; text-align:center; text-decoration:none; cursor:pointer; border:none; transition:.2s; box-sizing:border-box; }
+.mrls-btn--outline { background:transparent; border:2px solid #1B2980; color:#1B2980; }
+.mrls-btn--outline:hover { background:#1B2980; color:#fff; }
+.mrls-btn--white { background:#fff; color:#1B2980; }
+.mrls-btn--white:hover { background:#EFF6FF; }
+.mrls-btn:disabled { opacity:.5; cursor:not-allowed; }
+
+/* ── FAQ ── */
+.mrls-faq { max-width:680px; margin:60px auto; }
+.mrls-faq__title { font-family:'Instrument Serif',serif; font-size:28px; text-align:center; margin-bottom:32px; }
+details.mrls-faq__item { border-bottom:1px solid #DBEAFE; padding:16px 0; }
+details.mrls-faq__item summary { font-weight:600; cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; font-size:15px; }
+details.mrls-faq__item summary::after { content:'＋'; font-size:18px; color:#1B2980; flex-shrink:0; margin-left:12px; }
+details.mrls-faq__item[open] summary::after { content:'－'; }
+details.mrls-faq__item p { color:#475569; font-size:14px; line-height:1.7; margin:12px 0 0; padding-left:4px; }
+
+/* ── CTA final ── */
+.mrls-cta { background:linear-gradient(135deg,#1B2980,#2563EB); border-radius:20px; padding:60px 40px; text-align:center; color:#fff; margin:60px 0 0; }
+.mrls-cta h2 { font-family:'Instrument Serif',serif; font-size:36px; margin:0 0 16px; }
+.mrls-cta p { font-size:16px; opacity:.85; margin:0 0 32px; }
+
+/* Loading state */
+.mrls-loading { text-align:center; padding:20px; color:#9CA3AF; font-size:14px; }
+</style>
+
+<div class="mrls-page">
+
+  <!-- ── Hero ── -->
+  <section class="mrls-hero">
+    <div class="mrls-hero__badge">
+      <span>⚡</span> Plugin WordPress de email marketing
+    </div>
+    <h1 class="mrls-hero__title">
+      Email marketing profesional,<br>
+      <em>sin depender de nadie</em>
+    </h1>
+    <p class="mrls-hero__sub">
+      MyRock Mail Engine es un plugin WordPress standalone que te da control total
+      sobre tus contactos, campañas y automatizaciones — sin servicios externos, sin
+      límites arbitrarios, sin sorpresas en la factura.
+    </p>
+    <a href="#pricing" class="mrls-btn mrls-btn--outline" style="display:inline-block;width:auto;padding:14px 36px;text-decoration:none">
+      Ver planes →
+    </a>
+  </section>
+
+  <!-- ── Features ── -->
+  <section class="mrls-features">
+    <div class="mrls-feature">
+      <div class="mrls-feature__icon">📋</div>
+      <p class="mrls-feature__title">Gestión de contactos</p>
+      <p class="mrls-feature__desc">Importa via CSV, segmenta con listas y etiquetas, historial completo de actividad por contacto.</p>
+    </div>
+    <div class="mrls-feature">
+      <div class="mrls-feature__icon">📨</div>
+      <p class="mrls-feature__title">Campañas de correo</p>
+      <p class="mrls-feature__desc">Editor HTML completo, personalización con merge tags, programación y envío por lotes para no saturar tu SMTP.</p>
+    </div>
+    <div class="mrls-feature">
+      <div class="mrls-feature__icon">⚙️</div>
+      <p class="mrls-feature__title">Automatizaciones</p>
+      <p class="mrls-feature__desc">Flujos disparados por eventos: bienvenida, seguimiento, etiquetado condicional y esperas configurables.</p>
+    </div>
+    <div class="mrls-feature">
+      <div class="mrls-feature__icon">📊</div>
+      <p class="mrls-feature__title">Reportes y logs</p>
+      <p class="mrls-feature__desc">Rastrea aperturas, clics, bajas y rebotes. Exporta el historial completo de envíos.</p>
+    </div>
+    <div class="mrls-feature">
+      <div class="mrls-feature__icon">🔌</div>
+      <p class="mrls-feature__title">Múltiples proveedores SMTP</p>
+      <p class="mrls-feature__desc">Integra con wp_mail, SMTP propio o Mailgun (plan Pro). Cambia de proveedor sin tocar código.</p>
+    </div>
+    <div class="mrls-feature">
+      <div class="mrls-feature__icon">🔗</div>
+      <p class="mrls-feature__title">REST API completa</p>
+      <p class="mrls-feature__desc">Conecta el plugin con tus sistemas externos via API autenticada con clave propia.</p>
+    </div>
+  </section>
+
+  <!-- ── Comparación ── -->
+  <section class="mrls-compare">
+    <h2 class="mrls-compare__title">Free vs Pro</h2>
+    <table class="mrls-table">
+      <thead>
+        <tr>
+          <th>Característica</th>
+          <th>Free</th>
+          <th>Pro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Contactos</td><td><span class="mrls-limit">Hasta 500</span></td><td><span class="mrls-check">✓ Ilimitados</span></td></tr>
+        <tr><td>Campañas activas simultáneas</td><td><span class="mrls-limit">1</span></td><td><span class="mrls-check">✓ Ilimitadas</span></td></tr>
+        <tr><td>Listas y etiquetas</td><td><span class="mrls-check">✓</span></td><td><span class="mrls-check">✓</span></td></tr>
+        <tr><td>Formularios de suscripción</td><td><span class="mrls-check">✓</span></td><td><span class="mrls-check">✓</span></td></tr>
+        <tr><td>Automatizaciones</td><td><span class="mrls-cross">✗</span></td><td><span class="mrls-check">✓</span></td></tr>
+        <tr><td>Proveedor Mailgun</td><td><span class="mrls-cross">✗</span></td><td><span class="mrls-check">✓</span></td></tr>
+        <tr><td>REST API</td><td><span class="mrls-check">✓</span></td><td><span class="mrls-check">✓</span></td></tr>
+        <tr><td>Soporte prioritario</td><td><span class="mrls-cross">✗</span></td><td><span class="mrls-check">✓ Email directo</span></td></tr>
+        <tr><td>Actualizaciones</td><td><span class="mrls-cross">✗</span></td><td><span class="mrls-check">✓ Incluidas</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── Pricing ── -->
+  <section class="mrls-pricing" id="pricing">
+    <div class="mrls-pricing__header">
+      <h2 class="mrls-pricing__title">Planes</h2>
+      <p class="mrls-pricing__sub">Sin contratos. Cancela cuando quieras.</p>
+      <div class="mrls-toggle" role="group" aria-label="Periodo de facturación">
+        <button class="mrls-toggle__btn active" id="btn-monthly" onclick="switchPlan('monthly')">Mensual</button>
+        <button class="mrls-toggle__btn" id="btn-annual" onclick="switchPlan('annual')">
+          Anual <span class="mrls-save-badge">−30%</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mrls-cards" id="mrls-cards">
+      <!-- Free card -->
+      <div class="mrls-card mrls-card--free">
+        <p class="mrls-card__plan">Free</p>
+        <p class="mrls-card__price">$0 <span>MXN</span></p>
+        <p class="mrls-card__period">Para siempre</p>
+        <ul class="mrls-card__features">
+          <li>500 contactos</li>
+          <li>1 campaña activa</li>
+          <li>Formularios de suscripción</li>
+          <li>Listas y etiquetas</li>
+          <li>wp_mail + SMTP propio</li>
+        </ul>
+        <a href="https://myrock.com.mx/wp-json/wp/v2/plugins" class="mrls-btn mrls-btn--outline" style="text-decoration:none">
+          Descargar gratis
+        </a>
+      </div>
+
+      <!-- Pro card -->
+      <div class="mrls-card mrls-card--pro">
+        <span class="mrls-card__badge">✨ Más popular</span>
+        <p class="mrls-card__plan">Pro</p>
+        <p class="mrls-card__price" id="pro-price">
+          <span class="mrls-loading">Cargando…</span>
+        </p>
+        <p class="mrls-card__period" id="pro-period">&nbsp;</p>
+        <ul class="mrls-card__features">
+          <li>Contactos ilimitados</li>
+          <li>Campañas ilimitadas</li>
+          <li>Automatizaciones completas</li>
+          <li>Mailgun integrado</li>
+          <li>Soporte prioritario por email</li>
+          <li>Actualizaciones incluidas</li>
+        </ul>
+        <a href="#" id="pro-btn" class="mrls-btn mrls-btn--white" style="text-decoration:none">
+          Cargando…
+        </a>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:13px;color:#6B7280">
+      💳 Pago seguro vía MercadoPago · Acepta tarjetas, OXXO y SPEI
+    </p>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section class="mrls-faq">
+    <h2 class="mrls-faq__title">Preguntas frecuentes</h2>
+
+    <details class="mrls-faq__item">
+      <summary>¿Cómo activo mi licencia después de pagar?</summary>
+      <p>Recibirás un correo automático con tu llave de licencia (formato MRME-XXXX-XXXX-XXXX-XXXX) en los siguientes 5 minutos. Ve a <strong>WP Admin → MyRock Mail → Licencia</strong>, pega la llave y haz clic en «Activar».</p>
+    </details>
+
+    <details class="mrls-faq__item">
+      <summary>¿Cómo funciona la renovación automática?</summary>
+      <p>MercadoPago cargará automáticamente tu método de pago cada mes (o año). Al confirmar el pago, tu licencia se extiende de forma automática sin que tengas que hacer nada. Recibirás un correo de confirmación cada vez.</p>
+    </details>
+
+    <details class="mrls-faq__item">
+      <summary>¿Qué pasa si cancelo mi suscripción?</summary>
+      <p>Puedes cancelar desde tu cuenta de MercadoPago en cualquier momento. Tu licencia seguirá activa hasta la fecha de expiración actual y después el plugin pasará al plan Free automáticamente.</p>
+    </details>
+
+    <details class="mrls-faq__item">
+      <summary>¿El plugin funciona en cualquier servidor WordPress?</summary>
+      <p>Sí. MyRock Mail Engine es un plugin standalone — no requiere servicios externos para funcionar. Solo necesitas WordPress 6.0+ y PHP 8.0+. Para envíos de alto volumen recomendamos configurar un proveedor SMTP dedicado o Mailgun (plan Pro).</p>
+    </details>
+
+    <details class="mrls-faq__item">
+      <summary>¿Puedo usar el plugin en varios sitios?</summary>
+      <p>La licencia Pro es por instalación (1 sitio). Si necesitas activarlo en múltiples sitios, adquiere una licencia por cada uno o contáctanos en <a href="mailto:hola@myrock.com.mx">hola@myrock.com.mx</a> para un plan multi-sitio.</p>
+    </details>
+
+    <details class="mrls-faq__item">
+      <summary>¿Tienen soporte técnico?</summary>
+      <p>Los clientes Pro tienen soporte prioritario directo por email a <a href="mailto:hola@myrock.com.mx">hola@myrock.com.mx</a> con respuesta en 24 h hábiles.</p>
+    </details>
+  </section>
+
+  <!-- ── CTA final ── -->
+  <section class="mrls-cta">
+    <h2>Listo para escalar tu email marketing</h2>
+    <p>Instala el plugin, activa tu licencia Pro y empieza a enviar campañas profesionales hoy.</p>
+    <a href="#pricing" id="cta-btn" class="mrls-btn mrls-btn--white" style="display:inline-block;width:auto;padding:16px 48px;font-size:16px;text-decoration:none">
+      Ver planes →
+    </a>
+  </section>
+
+</div>
+
+<script>
+(function() {
+  var plans = null;
+  var currentPlan = 'monthly';
+
+  // Fetch plan data from the License Server REST API
+  fetch('/wp-json/mrls/v1/plans')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      plans = data;
+      renderPlan(currentPlan);
+    })
+    .catch(function(){
+      document.getElementById('pro-price').innerHTML = 'Desde $299 <span>MXN</span>';
+      document.getElementById('pro-period').textContent = '/mes';
+      var btn = document.getElementById('pro-btn');
+      btn.textContent = 'Contáctanos';
+      btn.href = 'mailto:hola@myrock.com.mx';
+    });
+
+  window.switchPlan = function(plan) {
+    currentPlan = plan;
+    document.getElementById('btn-monthly').classList.toggle('active', plan === 'monthly');
+    document.getElementById('btn-annual').classList.toggle('active', plan === 'annual');
+    if (plans) renderPlan(plan);
+  };
+
+  function renderPlan(plan) {
+    var data   = plans[plan];
+    var price  = data.price.toLocaleString('es-MX', {maximumFractionDigits:0});
+    var period = plan === 'annual' ? '/año' : '/mes';
+    var label  = plan === 'annual' ? 'Suscribirme anual' : 'Suscribirme mensual';
+    var url    = data.checkout_url || 'mailto:hola@myrock.com.mx';
+
+    document.getElementById('pro-price').innerHTML = '$' + price + ' <span>MXN</span>';
+    document.getElementById('pro-period').textContent = period;
+
+    var btn = document.getElementById('pro-btn');
+    btn.textContent = label;
+    btn.href = url;
+    btn.removeAttribute('disabled');
+  }
+})();
+</script>
+<!-- /wp:html -->
