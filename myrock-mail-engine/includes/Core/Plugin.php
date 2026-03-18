@@ -40,6 +40,18 @@ final class Plugin {
 	}
 
 	private function load_textdomain(): void {
+		// Override locale with the plugin's own language setting.
+		$settings    = get_option( 'mrme_settings', [] );
+		$plugin_lang = $settings['plugin_lang'] ?? '';
+
+		if ( ! empty( $plugin_lang ) && 'en' !== $plugin_lang ) {
+			$mo_file = MRME_DIR . 'languages/myrock-mail-engine-' . $plugin_lang . '.mo';
+			if ( file_exists( $mo_file ) ) {
+				load_textdomain( 'myrock-mail-engine', $mo_file );
+				return;
+			}
+		}
+
 		load_plugin_textdomain(
 			'myrock-mail-engine',
 			false,
@@ -62,7 +74,9 @@ final class Plugin {
 		$this->loader->add_action( 'admin_post_mrme_save_campaign', $admin, 'handle_save_campaign' );
 		$this->loader->add_action( 'admin_post_mrme_send_campaign', $admin, 'handle_send_campaign' );
 		$this->loader->add_action( 'admin_post_mrme_save_settings', $admin, 'handle_save_settings' );
+		$this->loader->add_action( 'admin_post_mrme_save_license',  $admin, 'handle_save_license' );
 		$this->loader->add_action( 'wp_ajax_mrme_send_test',        $admin, 'ajax_send_test' );
+		$this->loader->add_action( 'wp_ajax_mrme_test_mailgun',     $admin, 'ajax_test_mailgun' );
 		$this->loader->add_action( 'wp_ajax_mrme_search_contacts',  $admin, 'ajax_search_contacts' );
 	}
 

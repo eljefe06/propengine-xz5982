@@ -21,6 +21,21 @@ defined( 'ABSPATH' ) || exit;
 		<?php esc_html_e( 'MyRock Mail Engine — Dashboard', 'myrock-mail-engine' ); ?>
 	</h1>
 
+	<?php
+	$_lic = \MyRock\MailEngine\License\LicenseManager::get_status();
+	if ( ! \MyRock\MailEngine\License\LicenseManager::is_pro() ) :
+	?>
+	<div class="notice notice-warning" style="padding:10px 14px;display:flex;align-items:center;gap:14px;border-left-color:#1B2980;">
+		<strong style="color:#1B2980;">FREE</strong>
+		<span>
+			<?php esc_html_e( 'You are on the Free plan. Mailgun and Automations are locked.', 'myrock-mail-engine' ); ?>
+			&nbsp;<a href="<?php echo esc_url( admin_url( 'admin.php?page=mrme-license' ) ); ?>" style="font-weight:600;">
+				<?php esc_html_e( 'Upgrade to Pro →', 'myrock-mail-engine' ); ?>
+			</a>
+		</span>
+	</div>
+	<?php endif; ?>
+
 	<!-- ================================================================ -->
 	<!-- Stat cards                                                        -->
 	<!-- ================================================================ -->

@@ -7,6 +7,7 @@ defined( 'ABSPATH' ) || exit;
 use MyRock\MailEngine\Mail\Providers\ProviderInterface;
 use MyRock\MailEngine\Mail\Providers\WpMailProvider;
 use MyRock\MailEngine\Mail\Providers\SmtpProvider;
+use MyRock\MailEngine\Mail\Providers\MailgunProvider;
 
 /**
  * Class MailManager
@@ -81,6 +82,10 @@ class MailManager {
 		switch ( $provider_key ) {
 			case 'smtp':
 				self::$provider = new SmtpProvider();
+				break;
+
+			case 'mailgun':
+				self::$provider = new MailgunProvider();
 				break;
 
 			case 'wp_mail':

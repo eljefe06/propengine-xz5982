@@ -221,8 +221,21 @@ class SettingsPage {
 
         $delete_on_uninstall = isset( $_POST['delete_on_uninstall'] ) ? true : false;
 
-        // Validate mail_provider.
-        if ( ! in_array( $mail_provider, [ 'wp_mail', 'smtp' ], true ) ) {
+        // Mailgun fields.
+        $mailgun_api_key = isset( $_POST['mailgun_api_key'] ) ? sanitize_text_field( wp_unslash( $_POST['mailgun_api_key'] ) ) : '';
+        $mailgun_domain  = isset( $_POST['mailgun_domain'] )  ? sanitize_text_field( wp_unslash( $_POST['mailgun_domain'] ) )  : '';
+        $mailgun_region  = isset( $_POST['mailgun_region'] )  ? sanitize_key( $_POST['mailgun_region'] ) : 'us';
+
+        // Preserve existing Mailgun API key if none submitted.
+        if ( '' === $mailgun_api_key ) {
+            $mailgun_api_key = $existing['mailgun_api_key'] ?? '';
+        }
+        if ( ! in_array( $mailgun_region, [ 'us', 'eu' ], true ) ) {
+            $mailgun_region = 'us';
+        }
+
+        // Validate mail_provider (includes mailgun).
+        if ( ! in_array( $mail_provider, [ 'wp_mail', 'smtp', 'mailgun' ], true ) ) {
             $mail_provider = 'wp_mail';
         }
 
@@ -244,7 +257,14 @@ class SettingsPage {
             $smtp_password = $existing['smtp_password'] ?? '';
         }
 
+        // Language.
+        $plugin_lang = isset( $_POST['plugin_lang'] ) ? sanitize_key( $_POST['plugin_lang'] ) : 'en';
+        if ( ! in_array( $plugin_lang, [ 'en', 'es_MX' ], true ) ) {
+            $plugin_lang = 'en';
+        }
+
         $settings = [
+            'plugin_lang'         => $plugin_lang,
             'from_name'           => $from_name,
             'from_email'          => $from_email,
             'reply_to'            => $reply_to,
@@ -254,6 +274,9 @@ class SettingsPage {
             'smtp_encryption'     => $smtp_encryption,
             'smtp_username'       => $smtp_username,
             'smtp_password'       => $smtp_password,
+            'mailgun_api_key'     => $mailgun_api_key,
+            'mailgun_domain'      => $mailgun_domain,
+            'mailgun_region'      => $mailgun_region,
             'delete_on_uninstall' => $delete_on_uninstall,
         ];
 
@@ -270,6 +293,7 @@ class SettingsPage {
      */
     public function get_settings(): array {
         $defaults = [
+            'plugin_lang'         => 'en',
             'from_name'           => get_bloginfo( 'name' ),
             'from_email'          => get_option( 'admin_email' ),
             'reply_to'            => '',
@@ -279,6 +303,9 @@ class SettingsPage {
             'smtp_encryption'     => 'tls',
             'smtp_username'       => '',
             'smtp_password'       => '',
+            'mailgun_api_key'     => '',
+            'mailgun_domain'      => '',
+            'mailgun_region'      => 'us',
             'delete_on_uninstall' => false,
         ];
 

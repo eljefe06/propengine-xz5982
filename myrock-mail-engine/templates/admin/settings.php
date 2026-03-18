@@ -12,18 +12,23 @@
 
 defined( 'ABSPATH' ) || exit;
 
-// Read current option values.
-$from_name      = get_option( 'mrme_from_name',        get_bloginfo( 'name' ) );
-$from_email     = get_option( 'mrme_from_email',       get_option( 'admin_email' ) );
-$reply_to       = get_option( 'mrme_reply_to',         $from_email );
-$mail_provider  = get_option( 'mrme_mail_provider',    'wp_mail' );
-$smtp_host      = get_option( 'mrme_smtp_host',        '' );
-$smtp_port      = get_option( 'mrme_smtp_port',        '587' );
-$smtp_enc       = get_option( 'mrme_smtp_encryption',  'tls' );
-$smtp_user      = get_option( 'mrme_smtp_username',    '' );
-$smtp_pass      = get_option( 'mrme_smtp_password',    '' );
-$delete_on_uninstall = (bool) get_option( 'mrme_delete_on_uninstall', false );
-$api_key        = get_option( 'mrme_api_key',          '' );
+// Read current option values — all stored in mrme_settings array.
+$s              = get_option( 'mrme_settings', [] );
+$from_name      = $s['from_name']        ?? get_bloginfo( 'name' );
+$from_email     = $s['from_email']       ?? get_option( 'admin_email' );
+$reply_to       = $s['reply_to']         ?? $from_email;
+$mail_provider  = $s['mail_provider']    ?? 'wp_mail';
+$smtp_host      = $s['smtp_host']        ?? '';
+$smtp_port      = $s['smtp_port']        ?? '587';
+$smtp_enc       = $s['smtp_encryption']  ?? 'tls';
+$smtp_user      = $s['smtp_username']    ?? '';
+$smtp_pass      = $s['smtp_password']    ?? '';
+$mg_api_key     = $s['mailgun_api_key']  ?? '';
+$mg_domain      = $s['mailgun_domain']   ?? '';
+$mg_region      = $s['mailgun_region']   ?? 'us';
+$plugin_lang    = $s['plugin_lang']      ?? 'en';
+$delete_on_uninstall = (bool) ( $s['delete_on_uninstall'] ?? false );
+$api_key        = get_option( 'mrme_api_key', '' );
 
 // Notice from redirect.
 // phpcs:disable WordPress.Security.NonceVerification.Recommended
@@ -148,6 +153,19 @@ $saved = isset( $_GET['mrme_settings_saved'] ) && '1' === $_GET['mrme_settings_s
 									<strong><?php esc_html_e( 'Custom SMTP', 'myrock-mail-engine' ); ?></strong>
 									<span class="description">&nbsp;— <?php esc_html_e( 'Configure a dedicated SMTP server below.', 'myrock-mail-engine' ); ?></span>
 								</label>
+								<br>
+								<label class="mrme-radio-label">
+									<input
+										type="radio"
+										name="mrme_mail_provider"
+										value="mailgun"
+										id="mrme-provider-mailgun"
+										<?php checked( $mail_provider, 'mailgun' ); ?>
+										class="mrme-provider-radio"
+									>
+									<strong>Mailgun</strong>
+									<span class="description">&nbsp;— <?php esc_html_e( 'Send via Mailgun HTTP API. Best deliverability for high volumes.', 'myrock-mail-engine' ); ?></span>
+								</label>
 							</fieldset>
 						</td>
 					</tr>
@@ -251,6 +269,104 @@ $saved = isset( $_GET['mrme_settings_saved'] ) && '1' === $_GET['mrme_settings_s
 				</button>
 				<span id="mrme-smtp-test-result" class="mrme-inline-notice" style="display:none;"></span>
 			</p>
+		</div>
+
+		<!-- ============================================================== -->
+		<!-- Section 3b: Mailgun Settings                                    -->
+		<!-- ============================================================== -->
+		<div
+			class="mrme-form-section mrme-form-section--card"
+			id="mrme-mailgun-settings"
+			<?php echo 'mailgun' !== $mail_provider ? 'style="display:none;"' : ''; ?>
+		>
+			<h2 class="mrme-form-section__title">Mailgun</h2>
+			<p class="description">
+				<?php esc_html_e( 'Get your API key from', 'myrock-mail-engine' ); ?>
+				<a href="https://app.mailgun.com/mg/dashboard" target="_blank" rel="noopener">app.mailgun.com</a>.
+				<?php esc_html_e( 'Add and verify your sending domain first.', 'myrock-mail-engine' ); ?>
+			</p>
+
+			<table class="form-table mrme-settings-table">
+				<tbody>
+					<tr>
+						<th scope="row">
+							<label for="mrme-mg-api-key"><?php esc_html_e( 'API Key (Private)', 'myrock-mail-engine' ); ?></label>
+						</th>
+						<td>
+							<input
+								type="password"
+								id="mrme-mg-api-key"
+								name="mailgun_api_key"
+								class="regular-text"
+								value="<?php echo esc_attr( $mg_api_key ); ?>"
+								autocomplete="new-password"
+								placeholder="key-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+							>
+							<p class="description"><?php esc_html_e( 'Leave blank to keep the existing key.', 'myrock-mail-engine' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="mrme-mg-domain"><?php esc_html_e( 'Sending Domain', 'myrock-mail-engine' ); ?></label>
+						</th>
+						<td>
+							<input
+								type="text"
+								id="mrme-mg-domain"
+								name="mailgun_domain"
+								class="regular-text"
+								value="<?php echo esc_attr( $mg_domain ); ?>"
+								placeholder="mg.yourdomain.com"
+							>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="mrme-mg-region"><?php esc_html_e( 'Region', 'myrock-mail-engine' ); ?></label>
+						</th>
+						<td>
+							<select id="mrme-mg-region" name="mailgun_region">
+								<option value="us" <?php selected( $mg_region, 'us' ); ?>>US (api.mailgun.net)</option>
+								<option value="eu" <?php selected( $mg_region, 'eu' ); ?>>EU (api.eu.mailgun.net)</option>
+							</select>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>
+				<button type="button" id="mrme-test-mailgun-btn" class="button"
+					data-nonce="<?php echo esc_attr( wp_create_nonce( 'mrme_test_mailgun' ) ); ?>"
+					data-email="<?php echo esc_attr( $from_email ); ?>">
+					<?php esc_html_e( 'Send Test Email via Mailgun', 'myrock-mail-engine' ); ?>
+				</button>
+				<span id="mrme-mailgun-test-result" class="mrme-inline-notice" style="display:none;"></span>
+			</p>
+		</div>
+
+		<!-- ============================================================== -->
+		<!-- Section 3c: Language                                            -->
+		<!-- ============================================================== -->
+		<div class="mrme-form-section mrme-form-section--card">
+			<h2 class="mrme-form-section__title"><?php esc_html_e( 'Language / Idioma', 'myrock-mail-engine' ); ?></h2>
+			<p class="description"><?php esc_html_e( 'Select the language for the plugin admin interface.', 'myrock-mail-engine' ); ?></p>
+
+			<table class="form-table mrme-settings-table">
+				<tbody>
+					<tr>
+						<th scope="row">
+							<label for="mrme-plugin-lang"><?php esc_html_e( 'Interface Language', 'myrock-mail-engine' ); ?></label>
+						</th>
+						<td>
+							<select id="mrme-plugin-lang" name="plugin_lang">
+								<option value="en" <?php selected( $plugin_lang, 'en' ); ?>>🇺🇸 English</option>
+								<option value="es_MX" <?php selected( $plugin_lang, 'es_MX' ); ?>>🇲🇽 Español (México)</option>
+							</select>
+							<p class="description"><?php esc_html_e( 'This sets the language used in all plugin admin screens.', 'myrock-mail-engine' ); ?></p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 
 		<!-- ============================================================== -->

@@ -13,6 +13,7 @@ use MyRock\MailEngine\Admin\Pages\SettingsPage;
 use MyRock\MailEngine\Admin\Pages\DashboardPage;
 use MyRock\MailEngine\Admin\Pages\AutomationsPage;
 use MyRock\MailEngine\Admin\Pages\LogsPage;
+use MyRock\MailEngine\Admin\Pages\LicensePage;
 use MyRock\MailEngine\Services\CampaignService;
 
 /**
@@ -116,6 +117,15 @@ class Admin {
             'manage_options',
             'mrme-settings',
             [ new SettingsPage(), 'render' ]
+        );
+
+        add_submenu_page(
+            'mrme-dashboard',
+            __('License', 'myrock-mail-engine'),
+            __('License', 'myrock-mail-engine') . $this->license_badge(),
+            'manage_options',
+            'mrme-license',
+            [ new LicensePage(), 'render' ]
         );
     }
 
@@ -242,6 +252,22 @@ class Admin {
         ( new SettingsPage() )->handle_save();
     }
 
+    public function handle_save_license(): void {
+        ( new LicensePage() )->handle_save();
+    }
+
+    /**
+     * Return a small badge to append to the License menu item when on free plan.
+     *
+     * @return string
+     */
+    private function license_badge(): string {
+        if ( \MyRock\MailEngine\License\LicenseManager::is_pro() ) {
+            return '';
+        }
+        return ' <span style="background:#f0ad4e;color:#fff;border-radius:3px;padding:1px 6px;font-size:10px;vertical-align:middle;font-weight:700;">FREE</span>';
+    }
+
     /**
      * AJAX handler: send a test email for a campaign.
      *
@@ -317,5 +343,64 @@ class Admin {
         }, $results );
 
         wp_send_json_success( $contacts );
+    }
+
+    /**
+     * AJAX handler: send a test email via Mailgun with current form values.
+     *
+     * @return void
+     */
+    public function ajax_test_mailgun(): void {
+        check_ajax_referer( 'mrme_test_mailgun', '_wpnonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => __( 'Insufficient permissions.', 'myrock-mail-engine' ) ] );
+        }
+
+        $api_key = isset( $_POST['api_key'] ) ? sanitize_text_field( wp_unslash( $_POST['api_key'] ) ) : '';
+        $domain  = isset( $_POST['domain'] )  ? sanitize_text_field( wp_unslash( $_POST['domain'] ) )  : '';
+        $region  = isset( $_POST['region'] )  ? sanitize_key( $_POST['region'] ) : 'us';
+        $email   = isset( $_POST['email'] )   ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
+
+        // Fall back to stored key if the field was left blank (already saved).
+        if ( empty( $api_key ) ) {
+            $s       = get_option( 'mrme_settings', [] );
+            $api_key = $s['mailgun_api_key'] ?? '';
+        }
+
+        if ( empty( $api_key ) || empty( $domain ) || empty( $email ) ) {
+            wp_send_json_error( [ 'message' => __( 'API key, domain and a From email are required.', 'myrock-mail-engine' ) ] );
+        }
+
+        $base_url = ( 'eu' === $region )
+            ? 'https://api.eu.mailgun.net/v3'
+            : 'https://api.mailgun.net/v3';
+
+        $response = wp_remote_post( $base_url . '/' . $domain . '/messages', [
+            'timeout' => 20,
+            'headers' => [
+                'Authorization' => 'Basic ' . base64_encode( 'api:' . $api_key ),
+            ],
+            'body' => [
+                'from'    => get_bloginfo( 'name' ) . ' <' . $email . '>',
+                'to'      => $email,
+                'subject' => '[MyRock Mail Engine] Mailgun test',
+                'text'    => __( 'Mailgun is configured correctly. This is a test email from MyRock Mail Engine.', 'myrock-mail-engine' ),
+            ],
+        ] );
+
+        if ( is_wp_error( $response ) ) {
+            wp_send_json_error( [ 'message' => $response->get_error_message() ] );
+        }
+
+        $code = wp_remote_retrieve_response_code( $response );
+        if ( $code >= 200 && $code < 300 ) {
+            wp_send_json_success( [ 'message' => __( 'Test email sent via Mailgun successfully!', 'myrock-mail-engine' ) ] );
+        }
+
+        $body    = wp_remote_retrieve_body( $response );
+        $decoded = json_decode( $body, true );
+        $msg     = $decoded['message'] ?? sprintf( 'Mailgun HTTP %d', $code );
+        wp_send_json_error( [ 'message' => $msg ] );
     }
 }

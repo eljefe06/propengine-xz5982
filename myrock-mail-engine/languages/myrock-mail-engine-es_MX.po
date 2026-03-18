@@ -1,0 +1,519 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: MyRock Mail Engine 1.1.0\n"
+"Report-Msgid-Bugs-To: hola@myrock.com.mx\n"
+"POT-Creation-Date: 2026-03-18 00:00+0000\n"
+"PO-Revision-Date: 2026-03-18 00:00+0000\n"
+"Last-Translator: MyRock <hola@myrock.com.mx>\n"
+"Language-Team: Español México <hola@myrock.com.mx>\n"
+"Language: es_MX\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: MyRock Agent\n"
+
+msgid "MyRock Mail"
+msgstr "MyRock Mail"
+
+msgid "Dashboard"
+msgstr "Panel"
+
+msgid "Contacts"
+msgstr "Contactos"
+
+msgid "Lists"
+msgstr "Listas"
+
+msgid "Tags"
+msgstr "Etiquetas"
+
+msgid "Forms"
+msgstr "Formularios"
+
+msgid "Campaigns"
+msgstr "Campañas"
+
+msgid "Automations"
+msgstr "Automatizaciones"
+
+msgid "Logs"
+msgstr "Registros"
+
+msgid "Settings"
+msgstr "Configuración"
+
+msgid "License"
+msgstr "Licencia"
+
+msgid "Sender Identity"
+msgstr "Identidad del remitente"
+
+msgid ""
+"Default sender details used for all campaigns and transactional emails."
+msgstr ""
+"Datos del remitente usados en todas las campañas y correos transaccionales."
+
+msgid "From Name"
+msgstr "Nombre del remitente"
+
+msgid "The name that will appear in the \"From\" field."
+msgstr "El nombre que aparecerá en el campo \"De\"."
+
+msgid "From Email"
+msgstr "Correo del remitente"
+
+msgid "Make sure this email is authorised to send from your mail provider."
+msgstr ""
+"Asegúrate de que este correo esté autorizado en tu proveedor de correo."
+
+msgid "Reply-To"
+msgstr "Responder a"
+
+msgid "Leave empty to use the From Email as reply-to."
+msgstr "Deja vacío para usar el correo del remitente como responder-a."
+
+msgid "Mail Provider"
+msgstr "Proveedor de correo"
+
+msgid "Choose how outgoing emails are sent."
+msgstr "Elige cómo se envían los correos salientes."
+
+msgid "Provider"
+msgstr "Proveedor"
+
+msgid "WordPress wp_mail()"
+msgstr "WordPress wp_mail()"
+
+msgid ""
+"Uses the default WordPress mail function (PHP mail or any SMTP plugin "
+"already installed)."
+msgstr "Usa la función de correo nativa de WordPress."
+
+msgid "Custom SMTP"
+msgstr "SMTP personalizado"
+
+msgid "Configure a dedicated SMTP server below."
+msgstr "Configura un servidor SMTP dedicado a continuación."
+
+msgid "Send via Mailgun HTTP API. Best deliverability for high volumes."
+msgstr ""
+"Envía vía API HTTP de Mailgun. La mejor entregabilidad para grandes "
+"volúmenes."
+
+msgid "SMTP Settings"
+msgstr "Configuración SMTP"
+
+msgid "SMTP Host"
+msgstr "Servidor SMTP"
+
+msgid "SMTP Port"
+msgstr "Puerto SMTP"
+
+msgid "Common ports: 25, 465 (SSL), 587 (TLS)."
+msgstr "Puertos comunes: 25, 465 (SSL), 587 (TLS)."
+
+msgid "Encryption"
+msgstr "Cifrado"
+
+msgid "TLS (recommended, port 587)"
+msgstr "TLS (recomendado, puerto 587)"
+
+msgid "SSL (port 465)"
+msgstr "SSL (puerto 465)"
+
+msgid "None (not recommended)"
+msgstr "Ninguno (no recomendado)"
+
+msgid "Username"
+msgstr "Usuario"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "Password is stored encrypted in the database."
+msgstr "La contraseña se almacena cifrada en la base de datos."
+
+msgid "Test SMTP Connection"
+msgstr "Probar conexión SMTP"
+
+msgid "REST API Key"
+msgstr "Clave API REST"
+
+msgid ""
+"Use this key to authenticate requests to the REST API via the X-MRME-Key "
+"HTTP header."
+msgstr ""
+"Usa esta clave para autenticar peticiones a la API REST vía el header HTTP "
+"X-MRME-Key."
+
+msgid "API Key"
+msgstr "Clave API"
+
+msgid "No API key generated yet."
+msgstr "Aún no se ha generado ninguna clave API."
+
+msgid "Copy"
+msgstr "Copiar"
+
+msgid "Regenerating the API key will invalidate the current key. Continue?"
+msgstr "¿Regenerar la clave API invalida la clave actual. ¿Continuar?"
+
+msgid "Regenerate API Key"
+msgstr "Regenerar clave API"
+
+msgid "Generate API Key"
+msgstr "Generar clave API"
+
+msgid "Danger Zone"
+msgstr "Zona de peligro"
+
+msgid "Delete Data on Uninstall"
+msgstr "Eliminar datos al desinstalar"
+
+msgid ""
+"Remove all plugin data (contacts, campaigns, lists, logs) when the plugin is"
+" deleted."
+msgstr ""
+"Elimina todos los datos del plugin (contactos, campañas, listas, registros) "
+"al desinstalarlo."
+
+msgid ""
+"Warning: this action is irreversible. Back up your data before uninstalling."
+msgstr ""
+"Advertencia: esta acción es irreversible. Haz una copia de seguridad antes "
+"de desinstalar."
+
+msgid "Save Settings"
+msgstr "Guardar configuración"
+
+msgid "Settings saved successfully."
+msgstr "Configuración guardada correctamente."
+
+msgid "Failed to save settings. Please try again."
+msgstr "Error al guardar la configuración. Intenta de nuevo."
+
+msgid "API Key (Private)"
+msgstr "Clave API (Privada)"
+
+msgid "Leave blank to keep the existing key."
+msgstr "Deja vacío para conservar la clave actual."
+
+msgid "Sending Domain"
+msgstr "Dominio de envío"
+
+msgid "Region"
+msgstr "Región"
+
+msgid "Send Test Email via Mailgun"
+msgstr "Enviar correo de prueba vía Mailgun"
+
+msgid "Get your API key from"
+msgstr "Obtén tu clave API desde"
+
+msgid "Add and verify your sending domain first."
+msgstr "Primero agrega y verifica tu dominio de envío."
+
+msgid "API key, domain and a From email are required."
+msgstr "Se requieren la clave API, el dominio y un correo remitente."
+
+msgid "Test email sent via Mailgun successfully!"
+msgstr "¡Correo de prueba enviado vía Mailgun con éxito!"
+
+msgid ""
+"Mailgun is configured correctly. This is a test email from MyRock Mail "
+"Engine."
+msgstr ""
+"Mailgun está configurado correctamente. Este es un correo de prueba de "
+"MyRock Mail Engine."
+
+msgid "Mailgun API key or domain is not configured."
+msgstr "La clave API de Mailgun o el dominio no están configurados."
+
+msgid "\"to\" and \"subject\" are required fields."
+msgstr "Los campos \"para\" y \"asunto\" son obligatorios."
+
+msgid "Language / Idioma"
+msgstr "Idioma / Language"
+
+msgid "Select the language for the plugin admin interface."
+msgstr "Selecciona el idioma para la interfaz de administración del plugin."
+
+msgid "Interface Language"
+msgstr "Idioma de interfaz"
+
+msgid "This sets the language used in all plugin admin screens."
+msgstr ""
+"Esto define el idioma usado en todas las pantallas de administración del "
+"plugin."
+
+msgid "Add Contact"
+msgstr "Agregar contacto"
+
+msgid "Edit Contact"
+msgstr "Editar contacto"
+
+msgid "Import CSV"
+msgstr "Importar CSV"
+
+msgid "Search contacts…"
+msgstr "Buscar contactos…"
+
+msgid "First Name"
+msgstr "Nombre"
+
+msgid "Last Name"
+msgstr "Apellido"
+
+msgid "Email"
+msgstr "Correo electrónico"
+
+msgid "Phone"
+msgstr "Teléfono"
+
+msgid "Company"
+msgstr "Empresa"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Source"
+msgstr "Fuente"
+
+msgid "Notes"
+msgstr "Notas"
+
+msgid "Created"
+msgstr "Creado"
+
+msgid "Actions"
+msgstr "Acciones"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Are you sure you want to delete this contact?"
+msgstr "¿Estás seguro de que deseas eliminar este contacto?"
+
+msgid "subscribed"
+msgstr "suscrito"
+
+msgid "unsubscribed"
+msgstr "dado de baja"
+
+msgid "pending"
+msgstr "pendiente"
+
+msgid "bounced"
+msgstr "rebotado"
+
+msgid "complained"
+msgstr "queja"
+
+msgid "No contacts found."
+msgstr "No se encontraron contactos."
+
+msgid "Save Contact"
+msgstr "Guardar contacto"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "New Campaign"
+msgstr "Nueva campaña"
+
+msgid "Campaign Title"
+msgstr "Título de campaña"
+
+msgid "Subject"
+msgstr "Asunto"
+
+msgid "Preheader"
+msgstr "Pre-encabezado"
+
+msgid "HTML Content"
+msgstr "Contenido HTML"
+
+msgid "Plain Text"
+msgstr "Texto plano"
+
+msgid "Schedule"
+msgstr "Programar"
+
+msgid "Send Now"
+msgstr "Enviar ahora"
+
+msgid "draft"
+msgstr "borrador"
+
+msgid "scheduled"
+msgstr "programado"
+
+msgid "sending"
+msgstr "enviando"
+
+msgid "sent"
+msgstr "enviado"
+
+msgid "cancelled"
+msgstr "cancelado"
+
+msgid "Send test email"
+msgstr "Enviar correo de prueba"
+
+msgid "Test email sent successfully."
+msgstr "Correo de prueba enviado con éxito."
+
+msgid "No campaigns found."
+msgstr "No se encontraron campañas."
+
+msgid "New Automation"
+msgstr "Nueva automatización"
+
+msgid "Trigger"
+msgstr "Disparador"
+
+msgid "Steps"
+msgstr "Pasos"
+
+msgid "Add Step"
+msgstr "Agregar paso"
+
+msgid "Delay"
+msgstr "Demora"
+
+msgid "minutes"
+msgstr "minutos"
+
+msgid "hours"
+msgstr "horas"
+
+msgid "days"
+msgstr "días"
+
+msgid "No automations found."
+msgstr "No se encontraron automatizaciones."
+
+msgid "Total Contacts"
+msgstr "Total de contactos"
+
+msgid "Active Lists"
+msgstr "Listas activas"
+
+msgid "Campaigns Sent"
+msgstr "Campañas enviadas"
+
+msgid "Open Rate"
+msgstr "Tasa de apertura"
+
+msgid "Recent Activity"
+msgstr "Actividad reciente"
+
+msgid "New Form"
+msgstr "Nuevo formulario"
+
+msgid "Form Name"
+msgstr "Nombre del formulario"
+
+msgid "Double Opt-In"
+msgstr "Doble confirmación"
+
+msgid "Success Message"
+msgstr "Mensaje de éxito"
+
+msgid "Embed Shortcode"
+msgstr "Shortcode de inserción"
+
+msgid "No forms found."
+msgstr "No se encontraron formularios."
+
+msgid "Send Logs"
+msgstr "Registros de envío"
+
+msgid "Campaign"
+msgstr "Campaña"
+
+msgid "Recipient"
+msgstr "Destinatario"
+
+msgid "Sent At"
+msgstr "Enviado el"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "No logs found."
+msgstr "No se encontraron registros."
+
+msgid "MyRock Mail Engine — License"
+msgstr "MyRock Mail Engine — Licencia"
+
+msgid "License Key"
+msgstr "Clave de licencia"
+
+msgid "Activate License"
+msgstr "Activar licencia"
+
+msgid "Deactivate"
+msgstr "Desactivar"
+
+msgid "Active"
+msgstr "Activa"
+
+msgid "Inactive"
+msgstr "Inactiva"
+
+msgid "Free"
+msgstr "Gratuita"
+
+msgid "Pro"
+msgstr "Pro"
+
+msgid "License activated successfully."
+msgstr "Licencia activada con éxito."
+
+msgid "Invalid or expired license key."
+msgstr "Clave de licencia inválida o expirada."
+
+msgid "License deactivated."
+msgstr "Licencia desactivada."
+
+msgid "Upgrade to Pro"
+msgstr "Actualizar a Pro"
+
+msgid "Get your license at"
+msgstr "Obtén tu licencia en"
+
+msgid "You do not have permission to view this page."
+msgstr "No tienes permiso para ver esta página."
+
+msgid "You do not have permission to perform this action."
+msgstr "No tienes permiso para realizar esta acción."
+
+msgid "Insufficient permissions."
+msgstr "Permisos insuficientes."
+
+msgid "Invalid campaign ID or email address."
+msgstr "ID de campaña o correo electrónico inválido."
+
+msgid "Invalid or expired nonce."
+msgstr "Nonce inválido o expirado."
+
+msgid "A valid email address is required."
+msgstr "Se requiere una dirección de correo válida."
+
+msgid "Could not create contact."
+msgstr "No se pudo crear el contacto."
+
+msgid "Could not update contact."
+msgstr "No se pudo actualizar el contacto."
+
+msgid "Could not delete contact."
+msgstr "No se pudo eliminar el contacto."
+
+msgid "Contact not found."
+msgstr "Contacto no encontrado."

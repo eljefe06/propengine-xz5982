@@ -151,19 +151,65 @@
     /* SMTP settings toggle                                                 */
     /* ------------------------------------------------------------------ */
 
-    function toggleSmtpSection() {
+    function toggleProviderSections() {
         var selected = $( '.mrme-provider-radio:checked' ).val();
         if ( 'smtp' === selected ) {
             $( '#mrme-smtp-settings' ).slideDown( 200 );
         } else {
             $( '#mrme-smtp-settings' ).slideUp( 200 );
         }
+        if ( 'mailgun' === selected ) {
+            $( '#mrme-mailgun-settings' ).slideDown( 200 );
+        } else {
+            $( '#mrme-mailgun-settings' ).slideUp( 200 );
+        }
     }
 
-    $( document ).on( 'change', '.mrme-provider-radio', toggleSmtpSection );
+    $( document ).on( 'change', '.mrme-provider-radio', toggleProviderSections );
 
     // Run on load.
-    toggleSmtpSection();
+    toggleProviderSections();
+
+    /* ------------------------------------------------------------------ */
+    /* Test Mailgun connection (settings page)                              */
+    /* ------------------------------------------------------------------ */
+
+    $( document ).on( 'click', '#mrme-test-mailgun-btn', function ( e ) {
+        e.preventDefault();
+
+        var $btn    = $( this );
+        var nonce   = $btn.data( 'nonce' );
+        var email   = $btn.data( 'email' );
+        var $result = $( '#mrme-mailgun-test-result' );
+
+        $btn.prop( 'disabled', true );
+
+        $.post(
+            ajaxurl,
+            {
+                action:   'mrme_test_mailgun',
+                _wpnonce: nonce,
+                email:    email,
+                api_key:  $( '#mrme-mg-api-key' ).val(),
+                domain:   $( '#mrme-mg-domain' ).val(),
+                region:   $( '#mrme-mg-region' ).val()
+            },
+            function ( response ) {
+                if ( response && response.success ) {
+                    showInlineNotice( $result, response.data.message || 'Mailgun OK!', 'success', 6000 );
+                } else {
+                    var errMsg = ( response && response.data && response.data.message )
+                        ? response.data.message
+                        : 'Mailgun test failed.';
+                    showInlineNotice( $result, errMsg, 'error', 8000 );
+                }
+            }
+        ).fail( function () {
+            showInlineNotice( $result, mrmeAdmin.i18n.ajax_error, 'error', 6000 );
+        } ).always( function () {
+            $btn.prop( 'disabled', false );
+        } );
+    } );
 
     /* ------------------------------------------------------------------ */
     /* Test SMTP connection (settings page)                                 */
