@@ -32,8 +32,8 @@ $total    = License::count();
 				<p>
 					<label style="font-weight:600">Plan<br>
 						<select name="plan" style="width:100%;margin-top:4px">
-							<option value="monthly">Mensual — $299 MXN/mes</option>
-							<option value="annual">Anual — $2,499 MXN/año</option>
+							<option value="monthly">Mensual — $<?php echo esc_html( number_format( (float) get_option( 'mrls_price_monthly', 299 ), 0, '.', ',' ) ); ?> MXN/mes</option>
+							<option value="annual">Anual — $<?php echo esc_html( number_format( (float) get_option( 'mrls_price_annual', 2499 ), 0, '.', ',' ) ); ?> MXN/año</option>
 						</select>
 					</label>
 				</p>
