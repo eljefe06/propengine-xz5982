@@ -14,6 +14,7 @@ class Admin {
 		add_action( 'admin_post_mrls_save_settings',    [ $this, 'handle_settings' ] );
 		add_action( 'admin_post_mrls_create_license',   [ $this, 'handle_create_license' ] );
 		add_action( 'admin_post_mrls_cancel_license',   [ $this, 'handle_cancel_license' ] );
+		add_action( 'admin_post_mrls_create_mp_plans',  [ $this, 'handle_create_mp_plans' ] );
 	}
 
 	public function register_menus(): void {
@@ -94,6 +95,39 @@ class Admin {
 		}
 
 		wp_safe_redirect( add_query_arg( 'created', '1', admin_url( 'admin.php?page=mrls-licenses' ) ) );
+		die();
+	}
+
+	public function handle_create_mp_plans(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die();
+		}
+		check_admin_referer( 'mrls_create_mp_plans' );
+
+		$price_monthly = (float) get_option( 'mrls_price_monthly', 299 );
+		$price_annual  = (float) get_option( 'mrls_price_annual', 2499 );
+
+		$result = Services\MercadoPagoService::create_plans( $price_monthly, $price_annual );
+
+		$query = [];
+
+		if ( ! empty( $result['monthly'] ) && ! empty( $result['monthly']['id'] ) ) {
+			update_option( 'mrls_mp_plan_monthly_id', $result['monthly']['id'] );
+			update_option( 'mrls_mp_checkout_monthly', $result['monthly']['init_point'] ?? '' );
+			$query['plans_ok'] = 'monthly';
+		}
+
+		if ( ! empty( $result['annual'] ) && ! empty( $result['annual']['id'] ) ) {
+			update_option( 'mrls_mp_plan_annual_id', $result['annual']['id'] );
+			update_option( 'mrls_mp_checkout_annual', $result['annual']['init_point'] ?? '' );
+			$query['plans_ok'] = isset( $query['plans_ok'] ) ? 'both' : 'annual';
+		}
+
+		if ( ! empty( $result['errors'] ) ) {
+			$query['plans_error'] = urlencode( implode( ' | ', $result['errors'] ) );
+		}
+
+		wp_safe_redirect( add_query_arg( $query, admin_url( 'admin.php?page=mrls-settings' ) ) );
 		die();
 	}
 

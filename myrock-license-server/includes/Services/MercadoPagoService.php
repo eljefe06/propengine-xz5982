@@ -68,4 +68,89 @@ class MercadoPagoService {
 
 		return ( $annual_id && $plan_id === $annual_id ) ? 'annual' : 'monthly';
 	}
+
+	/**
+	 * Create both subscription plans (monthly + annual) in MercadoPago.
+	 * Returns array with keys 'monthly' and 'annual', each containing the API response.
+	 *
+	 * @param float  $price_monthly  Amount in MXN for the monthly plan.
+	 * @param float  $price_annual   Amount in MXN for the annual plan.
+	 * @param string $back_url       URL to redirect after subscription checkout.
+	 * @return array{ monthly: array|null, annual: array|null, errors: string[] }
+	 */
+	public static function create_plans( float $price_monthly, float $price_annual, string $back_url = '' ): array {
+		$token = self::access_token();
+		if ( ! $token ) {
+			return [ 'monthly' => null, 'annual' => null, 'errors' => [ 'Access token not configured.' ] ];
+		}
+
+		if ( ! $back_url ) {
+			$back_url = home_url( '/plugin/?subscribed=1' );
+		}
+
+		$errors  = [];
+		$results = [];
+
+		$plans_config = [
+			'monthly' => [
+				'reason'         => 'MyRock Mail Engine Pro — Mensual',
+				'frequency'      => 1,
+				'frequency_type' => 'months',
+				'amount'         => $price_monthly,
+			],
+			'annual' => [
+				'reason'         => 'MyRock Mail Engine Pro — Anual',
+				'frequency'      => 12,
+				'frequency_type' => 'months',
+				'amount'         => $price_annual,
+			],
+		];
+
+		foreach ( $plans_config as $key => $cfg ) {
+			$body = wp_json_encode( [
+				'reason'         => $cfg['reason'],
+				'auto_recurring' => [
+					'frequency'          => $cfg['frequency'],
+					'frequency_type'     => $cfg['frequency_type'],
+					'transaction_amount' => $cfg['amount'],
+					'currency_id'        => 'MXN',
+				],
+				'back_url' => $back_url,
+				'status'   => 'active',
+			] );
+
+			$response = wp_remote_post(
+				'https://api.mercadopago.com/preapproval_plan',
+				[
+					'timeout' => 20,
+					'headers' => [
+						'Authorization' => "Bearer {$token}",
+						'Content-Type'  => 'application/json',
+					],
+					'body' => $body,
+				]
+			);
+
+			if ( is_wp_error( $response ) ) {
+				$errors[]       = "{$key}: " . $response->get_error_message();
+				$results[ $key ] = null;
+				continue;
+			}
+
+			$code = wp_remote_retrieve_response_code( $response );
+			$data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+			if ( $code < 200 || $code >= 300 || empty( $data['id'] ) ) {
+				$msg            = $data['message'] ?? "HTTP {$code}";
+				$errors[]       = "{$key}: {$msg}";
+				$results[ $key ] = null;
+				continue;
+			}
+
+			$results[ $key ] = $data;
+		}
+
+		$results['errors'] = $errors;
+		return $results;
+	}
 }

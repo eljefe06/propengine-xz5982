@@ -10,6 +10,21 @@ $webhook_url = get_rest_url( null, 'mrls/v1/webhook' );
 		<div class="notice notice-success is-dismissible"><p>✅ Configuración guardada.</p></div>
 	<?php endif; ?>
 
+	<?php if ( isset( $_GET['plans_ok'] ) ) : ?>
+		<?php $which = sanitize_key( $_GET['plans_ok'] ); ?>
+		<div class="notice notice-success is-dismissible">
+			<p>✅ Planes creados correctamente en MercadoPago
+			<?php if ( 'both' === $which ) : ?>(mensual <strong>y</strong> anual)<?php else : ?>(<strong><?php echo esc_html( $which ); ?></strong>)<?php endif; ?>.
+			Los IDs y URLs de checkout se han rellenado automáticamente.</p>
+		</div>
+	<?php endif; ?>
+
+	<?php if ( isset( $_GET['plans_error'] ) ) : ?>
+		<div class="notice notice-error is-dismissible">
+			<p>⚠️ Error al crear planes: <?php echo esc_html( urldecode( sanitize_text_field( $_GET['plans_error'] ) ) ); ?></p>
+		</div>
+	<?php endif; ?>
+
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 		<?php wp_nonce_field( 'mrls_save_settings' ); ?>
 		<input type="hidden" name="action" value="mrls_save_settings">
@@ -109,6 +124,26 @@ $webhook_url = get_rest_url( null, 'mrls/v1/webhook' );
 		</table>
 
 		<?php submit_button( 'Guardar configuración' ); ?>
+	</form>
+
+	<!-- ── Crear planes en MP ─────────────────────────────────────── -->
+	<hr>
+	<h2>🚀 Crear planes en MercadoPago automáticamente</h2>
+	<p style="max-width:640px;color:#555">
+		Una vez que hayas guardado tu <strong>Access Token</strong> y definido los precios, haz clic en el botón de abajo.
+		El sistema creará los dos planes (mensual y anual) en MercadoPago y llenará los IDs y URLs de checkout automáticamente.
+		<strong>Solo necesitas hacerlo una vez.</strong>
+	</p>
+	<?php if ( get_option( 'mrls_mp_plan_monthly_id' ) || get_option( 'mrls_mp_plan_annual_id' ) ) : ?>
+	<p style="color:#16a34a;font-weight:600">✅ Planes ya configurados. Solo vuelve a hacer clic si quieres regenerarlos.</p>
+	<?php endif; ?>
+	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+		<?php wp_nonce_field( 'mrls_create_mp_plans' ); ?>
+		<input type="hidden" name="action" value="mrls_create_mp_plans">
+		<button type="submit" class="button button-primary button-large"
+				onclick="return confirm('¿Crear planes en MercadoPago? Asegúrate de haber guardado el Access Token y los precios primero.')">
+			Crear planes en MercadoPago
+		</button>
 	</form>
 
 	<!-- ── Instrucciones ─────────────────────────────────────────── -->
