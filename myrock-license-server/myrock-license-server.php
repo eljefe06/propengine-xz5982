@@ -3,7 +3,7 @@
  * Plugin Name:       MyRock License Server
  * Plugin URI:        https://myrock.com.mx/plugin
  * Description:       Servidor de licencias para MyRock Mail Engine. Genera y valida llaves Pro con cobro recurrente vía MercadoPago.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            MyRock
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MRLS_VERSION', '1.0.0' );
+define( 'MRLS_VERSION', '1.0.1' );
 define( 'MRLS_FILE',    __FILE__ );
 define( 'MRLS_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'MRLS_URL',     plugin_dir_url( __FILE__ ) );
