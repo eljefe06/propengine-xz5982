@@ -70,6 +70,72 @@ class MercadoPagoService {
 	}
 
 	/**
+	 * Create a one-time payment preference in MercadoPago.
+	 * Used by the /plugin page checkout modal.
+	 *
+	 * @param string $plan   'monthly' | 'annual'
+	 * @param string $email  Buyer's email.
+	 * @return string|null   init_point URL or null on failure.
+	 */
+	public static function create_preference( string $plan, string $email ): ?string {
+		$token = self::access_token();
+		if ( ! $token ) {
+			return null;
+		}
+
+		$price = (float) get_option(
+			'annual' === $plan ? 'mrls_price_annual' : 'mrls_price_monthly',
+			'annual' === $plan ? 2499 : 299
+		);
+		$label = 'annual' === $plan ? 'Anual' : 'Mensual';
+
+		$body = wp_json_encode( [
+			'items'              => [ [
+				'title'       => "MyRock Mail Engine Pro \u2014 {$label}",
+				'unit_price'  => $price,
+				'quantity'    => 1,
+				'currency_id' => 'MXN',
+			] ],
+			'payer'              => [ 'email' => $email ],
+			'external_reference' => "{$plan}:{$email}",
+			'back_urls'          => [
+				'success' => home_url( '/plugin/?payment=success' ),
+				'failure' => home_url( '/plugin/?payment=failure' ),
+				'pending' => home_url( '/plugin/?payment=pending' ),
+			],
+			'notification_url'   => rest_url( 'mrls/v1/webhook' ),
+			'auto_return'        => 'approved',
+		] );
+
+		$response = wp_remote_post(
+			'https://api.mercadopago.com/checkout/preferences',
+			[
+				'timeout' => 20,
+				'headers' => [
+					'Authorization' => "Bearer {$token}",
+					'Content-Type'  => 'application/json',
+				],
+				'body' => $body,
+			]
+		);
+
+		if ( is_wp_error( $response ) ) {
+			error_log( '[MRLS] create_preference error: ' . $response->get_error_message() );
+			return null;
+		}
+
+		$code = wp_remote_retrieve_response_code( $response );
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( $code < 200 || $code >= 300 || empty( $data['init_point'] ) ) {
+			error_log( '[MRLS] create_preference HTTP ' . $code . ': ' . wp_remote_retrieve_body( $response ) );
+			return null;
+		}
+
+		return (string) $data['init_point'];
+	}
+
+	/**
 	 * Create both subscription plans (monthly + annual) in MercadoPago.
 	 * Returns array with keys 'monthly' and 'annual', each containing the API response.
 	 *

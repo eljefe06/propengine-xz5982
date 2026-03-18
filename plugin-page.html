@@ -81,9 +81,43 @@ details.mrls-faq__item p { color:#475569; font-size:14px; line-height:1.7; margi
 
 /* Loading state */
 .mrls-loading { text-align:center; padding:20px; color:#9CA3AF; font-size:14px; }
+
+/* ── Modal checkout ── */
+.mrls-overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,.6); z-index:9999; align-items:center; justify-content:center; padding:16px; }
+.mrls-overlay.open { display:flex; }
+.mrls-modal { background:#fff; border-radius:20px; padding:40px 36px; max-width:420px; width:100%; box-shadow:0 24px 60px rgba(0,0,0,.18); animation:modal-in .2s ease; }
+@keyframes modal-in { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+.mrls-modal__close { float:right; background:none; border:none; font-size:22px; cursor:pointer; color:#94A3B8; margin:-8px -8px 0 0; line-height:1; }
+.mrls-modal__title { font-family:'Instrument Serif',serif; font-size:24px; margin:0 0 6px; }
+.mrls-modal__sub { color:#64748B; font-size:14px; margin:0 0 24px; }
+.mrls-modal__label { display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px; }
+.mrls-modal__input { width:100%; padding:11px 14px; border:1.5px solid #CBD5E1; border-radius:10px; font-size:15px; box-sizing:border-box; outline:none; transition:.2s; }
+.mrls-modal__input:focus { border-color:#1B2980; box-shadow:0 0 0 3px rgba(27,41,128,.12); }
+.mrls-modal__error { color:#DC2626; font-size:13px; margin-top:8px; display:none; }
+.mrls-modal__submit { margin-top:20px; background:linear-gradient(135deg,#1B2980,#2563EB); color:#fff; border:none; width:100%; padding:14px; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; transition:.2s; }
+.mrls-modal__submit:hover { opacity:.9; }
+.mrls-modal__submit:disabled { opacity:.6; cursor:not-allowed; }
+.mrls-modal__secure { text-align:center; font-size:12px; color:#94A3B8; margin-top:14px; }
+
+/* ── Payment banners ── */
+.mrls-payment-banner { display:none; border-radius:12px; padding:18px 24px; margin-bottom:28px; font-size:15px; font-weight:500; }
+.mrls-payment-banner.success { display:block; background:#DCFCE7; color:#166534; border:1px solid #BBF7D0; }
+.mrls-payment-banner.failure { display:block; background:#FEF2F2; color:#991B1B; border:1px solid #FECACA; }
+.mrls-payment-banner.pending { display:block; background:#FEF9C3; color:#854D0E; border:1px solid #FEF08A; }
 </style>
 
 <div class="mrls-page">
+
+  <!-- ── Banners de respuesta de pago ── -->
+  <div id="payment-banner-success" class="mrls-payment-banner success">
+    ✅ ¡Pago recibido! Recibirás tu llave de licencia por correo en los próximos minutos.
+  </div>
+  <div id="payment-banner-failure" class="mrls-payment-banner failure">
+    ❌ El pago no pudo procesarse. Intenta de nuevo o contáctanos en <a href="mailto:hola@myrock.com.mx">hola@myrock.com.mx</a>.
+  </div>
+  <div id="payment-banner-pending" class="mrls-payment-banner pending">
+    ⏳ Tu pago está siendo procesado. Te notificaremos por correo cuando se confirme.
+  </div>
 
   <!-- ── Hero ── -->
   <section class="mrls-hero">
@@ -266,24 +300,41 @@ details.mrls-faq__item p { color:#475569; font-size:14px; line-height:1.7; margi
 
 </div>
 
+<!-- ── Modal de checkout ── -->
+<div class="mrls-overlay" id="checkout-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="mrls-modal">
+    <button class="mrls-modal__close" id="modal-close" aria-label="Cerrar">×</button>
+    <p class="mrls-modal__title" id="modal-title">Suscribirse al plan <span id="modal-plan-label">Pro</span></p>
+    <p class="mrls-modal__sub" id="modal-price-line">&nbsp;</p>
+    <label class="mrls-modal__label" for="modal-email">Correo electrónico</label>
+    <input class="mrls-modal__input" type="email" id="modal-email" placeholder="tu@correo.com" autocomplete="email" required>
+    <p class="mrls-modal__error" id="modal-error"></p>
+    <button class="mrls-modal__submit" id="modal-submit">Ir a pagar →</button>
+    <p class="mrls-modal__secure">🔒 Pago 100 % seguro vía MercadoPago</p>
+  </div>
+</div>
+
 <script>
 (function() {
   var plans = null;
   var currentPlan = 'monthly';
 
-  // Fetch plan data from the License Server REST API
+  // ── Banners de estado de pago ──────────────────────────────────────────────
+  (function() {
+    var p = new URLSearchParams(window.location.search).get('payment');
+    if (p === 'success') document.getElementById('payment-banner-success').style.display = 'block';
+    else if (p === 'failure') document.getElementById('payment-banner-failure').style.display = 'block';
+    else if (p === 'pending') document.getElementById('payment-banner-pending').style.display = 'block';
+  })();
+
+  // ── Precios desde la API ───────────────────────────────────────────────────
   fetch('/wp-json/mrls/v1/plans')
     .then(function(r){ return r.json(); })
-    .then(function(data){
-      plans = data;
-      renderPlan(currentPlan);
-    })
+    .then(function(data){ plans = data; renderPlan(currentPlan); })
     .catch(function(){
-      document.getElementById('pro-price').innerHTML = 'Desde $299 <span>MXN</span>';
+      document.getElementById('pro-price').innerHTML = '$299 <span>MXN</span>';
       document.getElementById('pro-period').textContent = '/mes';
-      var btn = document.getElementById('pro-btn');
-      btn.textContent = 'Contáctanos';
-      btn.href = 'mailto:hola@myrock.com.mx';
+      enableCheckoutButton(document.getElementById('pro-btn'), 'Suscribirme mensual');
     });
 
   window.switchPlan = function(plan) {
@@ -298,15 +349,83 @@ details.mrls-faq__item p { color:#475569; font-size:14px; line-height:1.7; margi
     var price  = data.price.toLocaleString('es-MX', {maximumFractionDigits:0});
     var period = plan === 'annual' ? '/año' : '/mes';
     var label  = plan === 'annual' ? 'Suscribirme anual' : 'Suscribirme mensual';
-    var url    = data.checkout_url || 'mailto:hola@myrock.com.mx';
 
     document.getElementById('pro-price').innerHTML = '$' + price + ' <span>MXN</span>';
     document.getElementById('pro-period').textContent = period;
+    enableCheckoutButton(document.getElementById('pro-btn'), label);
+  }
 
-    var btn = document.getElementById('pro-btn');
+  function enableCheckoutButton(btn, label) {
     btn.textContent = label;
-    btn.href = url;
+    btn.removeAttribute('href');
     btn.removeAttribute('disabled');
+    btn.onclick = function(e) { e.preventDefault(); openModal(); };
+  }
+
+  // ── Modal ──────────────────────────────────────────────────────────────────
+  var overlay = document.getElementById('checkout-overlay');
+  var emailEl = document.getElementById('modal-email');
+  var errorEl = document.getElementById('modal-error');
+  var submitEl = document.getElementById('modal-submit');
+
+  function openModal() {
+    var data = plans && plans[currentPlan];
+    var price = data ? data.price.toLocaleString('es-MX', {maximumFractionDigits:0}) : '';
+    var period = currentPlan === 'annual' ? '/año' : '/mes';
+    document.getElementById('modal-plan-label').textContent = currentPlan === 'annual' ? 'Anual' : 'Mensual';
+    document.getElementById('modal-price-line').textContent = price ? '$' + price + ' MXN' + period : '';
+    overlay.classList.add('open');
+    emailEl.focus();
+  }
+
+  document.getElementById('modal-close').onclick = closeModal;
+  overlay.onclick = function(e) { if (e.target === overlay) closeModal(); };
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    errorEl.style.display = 'none';
+    errorEl.textContent = '';
+    emailEl.value = '';
+    submitEl.disabled = false;
+    submitEl.textContent = 'Ir a pagar →';
+  }
+
+  submitEl.onclick = function() {
+    var email = emailEl.value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('Por favor ingresa un correo válido.');
+      return;
+    }
+    submitEl.disabled = true;
+    submitEl.textContent = 'Creando pago…';
+    errorEl.style.display = 'none';
+
+    fetch('/wp-json/mrls/v1/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan: currentPlan, email: email })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      if (data.init_point) {
+        window.location.href = data.init_point;
+      } else {
+        showError(data.error || 'Error al procesar. Intenta de nuevo.');
+        submitEl.disabled = false;
+        submitEl.textContent = 'Ir a pagar →';
+      }
+    })
+    .catch(function() {
+      showError('Error de conexión. Intenta de nuevo.');
+      submitEl.disabled = false;
+      submitEl.textContent = 'Ir a pagar →';
+    });
+  };
+
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.style.display = 'block';
   }
 })();
 </script>

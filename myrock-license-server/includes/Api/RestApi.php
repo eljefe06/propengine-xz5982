@@ -31,6 +31,25 @@ class RestApi {
 			'callback'            => [ $this, 'get_plans' ],
 			'permission_callback' => '__return_true',
 		] );
+
+		// Public: create a MercadoPago payment preference and return init_point.
+		register_rest_route( 'mrls/v1', '/checkout', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ $this, 'create_checkout' ],
+			'permission_callback' => '__return_true',
+			'args'                => [
+				'plan'  => [
+					'required'          => true,
+					'sanitize_callback' => 'sanitize_key',
+					'validate_callback' => function( $v ) { return in_array( $v, [ 'monthly', 'annual' ], true ); },
+				],
+				'email' => [
+					'required'          => true,
+					'sanitize_callback' => 'sanitize_email',
+					'validate_callback' => 'is_email',
+				],
+			],
+		] );
 	}
 
 	// -------------------------------------------------------------------------
@@ -60,6 +79,22 @@ class RestApi {
 		}
 
 		return new \WP_REST_Response( [ 'ok' => true ], 200 );
+	}
+
+	public function create_checkout( \WP_REST_Request $request ): \WP_REST_Response {
+		$plan  = $request->get_param( 'plan' );
+		$email = $request->get_param( 'email' );
+
+		$init_point = MercadoPagoService::create_preference( $plan, $email );
+
+		if ( ! $init_point ) {
+			return new \WP_REST_Response(
+				[ 'error' => 'No se pudo crear el pago. Verifica que el Access Token de MercadoPago esté configurado.' ],
+				500
+			);
+		}
+
+		return new \WP_REST_Response( [ 'init_point' => $init_point ], 200 );
 	}
 
 	public function get_plans( \WP_REST_Request $request ): \WP_REST_Response {
@@ -109,29 +144,47 @@ class RestApi {
 
 	private function handle_payment_event( string $payment_id ): void {
 		$payment = MercadoPagoService::get_payment( $payment_id );
-		if ( ! $payment ) {
+		if ( ! $payment || 'approved' !== ( $payment['status'] ?? '' ) ) {
 			return;
 		}
 
-		if ( 'approved' !== ( $payment['status'] ?? '' ) ) {
-			return;
-		}
-
-		// Find the subscription associated with this payment.
+		// Case 1: payment linked to a subscription — renew the license.
 		$sub_id = (string) (
 			$payment['metadata']['preapproval_id']
 			?? $payment['point_of_interaction']['transaction_data']['subscription_id']
 			?? ''
 		);
 
-		if ( ! $sub_id ) {
+		if ( $sub_id ) {
+			$license = License::find_by_subscription( $sub_id );
+			if ( $license ) {
+				LicenseService::renew( $license );
+				error_log( "[MRLS] Renewed via payment {$payment_id} → {$license->license_key}" );
+			}
 			return;
 		}
 
-		$license = License::find_by_subscription( $sub_id );
-		if ( $license ) {
-			LicenseService::renew( $license );
-			error_log( "[MRLS] Renewed via payment {$payment_id} → {$license->license_key}" );
+		// Case 2: direct preference payment from the /plugin page checkout modal.
+		$ext_ref = (string) ( $payment['external_reference'] ?? '' );
+		if ( ! $ext_ref || strpos( $ext_ref, ':' ) === false ) {
+			return;
 		}
+
+		[ $plan, $email ] = explode( ':', $ext_ref, 2 );
+		$plan  = sanitize_key( $plan );
+		$email = sanitize_email( $email );
+
+		if ( ! in_array( $plan, [ 'monthly', 'annual' ], true ) || ! is_email( $email ) ) {
+			return;
+		}
+
+		// Avoid creating a duplicate license for the same payment.
+		$existing = License::find_by_subscription( 'pay-' . $payment_id );
+		if ( $existing ) {
+			return;
+		}
+
+		$new = LicenseService::create_from_subscription( 'pay-' . $payment_id, $email, $plan, $email );
+		error_log( "[MRLS] Created license {$new->license_key} via payment {$payment_id} for {$email} ({$plan})" );
 	}
 }
