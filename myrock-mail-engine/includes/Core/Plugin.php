@@ -36,6 +36,7 @@ final class Plugin {
 		$this->register_public();
 		$this->register_api();
 		$this->register_cron();
+		$this->register_integrations();
 		$this->loader->run();
 	}
 
@@ -119,6 +120,15 @@ final class Plugin {
 			];
 			return $schedules;
 		} );
+	}
+
+	private function register_integrations(): void {
+		// WPForms → MRME: captura leads aunque sea con la versión Lite.
+		// Solo se activa si WPForms está instalado.
+		if ( defined( 'WPFORMS_VERSION' ) ) {
+			$wpforms = new \MyRock\MailEngine\Integrations\WpFormsIntegration();
+			$this->loader->add_action( 'wpforms_process_complete', $wpforms, 'handle_submission', 10, 4 );
+		}
 	}
 
 	public function get_loader(): Loader {

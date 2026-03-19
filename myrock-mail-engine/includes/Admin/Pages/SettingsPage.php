@@ -282,6 +282,30 @@ class SettingsPage {
 
         update_option( self::OPTION_KEY, $settings, false );
 
+        // ── Integración WPForms ──────────────────────────────────────────
+        // phpcs:ignore WordPress.Security.NonceVerification
+        if ( isset( $_POST['mrme_wpforms'] ) && is_array( $_POST['mrme_wpforms'] ) ) {
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+            $wpf_raw = wp_unslash( $_POST['mrme_wpforms'] );
+
+            $form_ids = [];
+            if ( ! empty( $wpf_raw['form_ids_raw'] ) ) {
+                foreach ( explode( ',', (string) $wpf_raw['form_ids_raw'] ) as $fid ) {
+                    $fid = (int) trim( $fid );
+                    if ( $fid > 0 ) {
+                        $form_ids[] = $fid;
+                    }
+                }
+            }
+
+            \MyRock\MailEngine\Integrations\WpFormsIntegration::save_settings( [
+                'enabled'  => ! empty( $wpf_raw['enabled'] ),
+                'list_id'  => (int) ( $wpf_raw['list_id'] ?? 0 ),
+                'tag_id'   => (int) ( $wpf_raw['tag_id']  ?? 0 ),
+                'form_ids' => $form_ids,
+            ] );
+        }
+
         wp_safe_redirect( add_query_arg( [ 'notice' => 'saved', 'notice_type' => 'success' ], $redirect ) );
         die();
     }

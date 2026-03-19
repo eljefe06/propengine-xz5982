@@ -414,6 +414,92 @@ $saved = isset( $_GET['mrme_settings_saved'] ) && '1' === $_GET['mrme_settings_s
 		</div>
 
 		<!-- ============================================================== -->
+		<!-- ============================================================== -->
+		<!-- Section: Integraciones                                          -->
+		<!-- ============================================================== -->
+		<div class="mrme-form-section mrme-form-section--card">
+			<h2 class="mrme-form-section__title"><?php esc_html_e( 'Integraciones', 'myrock-mail-engine' ); ?></h2>
+
+			<?php
+			$wpf   = \MyRock\MailEngine\Integrations\WpFormsIntegration::get_settings();
+			global $wpdb;
+			$lists = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}mrme_lists ORDER BY name ASC" );
+			$tags  = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}mrme_tags  ORDER BY name ASC" );
+			?>
+
+			<h3 style="margin-top:0;display:flex;align-items:center;gap:10px">
+				WPForms → MyRock Mail Engine
+				<?php if ( ! defined( 'WPFORMS_VERSION' ) ) : ?>
+					<span style="font-size:12px;font-weight:400;color:#92400e;background:#FEF3C7;border:1px solid #FDE68A;padding:2px 10px;border-radius:100px">
+						WPForms no detectado — instálalo para activar esta integración
+					</span>
+				<?php else : ?>
+					<span style="font-size:12px;font-weight:400;color:#166534;background:#DCFCE7;border:1px solid #BBF7D0;padding:2px 10px;border-radius:100px">
+						WPForms <?php echo esc_html( WPFORMS_VERSION ); ?> detectado ✓
+					</span>
+				<?php endif; ?>
+			</h3>
+			<p style="color:#6B7280;margin-top:0;margin-bottom:20px;font-size:13px">
+				Cuando alguien envíe un formulario de WPForms, el lead se guardará automáticamente como contacto en MRME.
+				Compatible con WPForms Lite y Pro.
+			</p>
+
+			<table class="form-table mrme-settings-table">
+				<tbody>
+					<tr>
+						<th scope="row">Activar</th>
+						<td>
+							<label>
+								<input type="checkbox" name="mrme_wpforms[enabled]" value="1" <?php checked( ! empty( $wpf['enabled'] ) ); ?>>
+								Capturar leads de WPForms en MRME
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Lista por defecto</th>
+						<td>
+							<select name="mrme_wpforms[list_id]" style="min-width:220px">
+								<option value="0">— Ninguna —</option>
+								<?php foreach ( $lists as $list ) : ?>
+									<option value="<?php echo esc_attr( $list->id ); ?>" <?php selected( (int) $wpf['list_id'], (int) $list->id ); ?>>
+										<?php echo esc_html( $list->name ); ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+							<p class="description">Los leads se agregarán a esta lista automáticamente.</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Etiqueta por defecto</th>
+						<td>
+							<select name="mrme_wpforms[tag_id]" style="min-width:220px">
+								<option value="0">— Ninguna —</option>
+								<?php foreach ( $tags as $tag ) : ?>
+									<option value="<?php echo esc_attr( $tag->id ); ?>" <?php selected( (int) $wpf['tag_id'], (int) $tag->id ); ?>>
+										<?php echo esc_html( $tag->name ); ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+							<p class="description">Etiqueta que se asignará a cada lead capturado desde WPForms.</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Formularios específicos</th>
+						<td>
+							<input
+								type="text"
+								name="mrme_wpforms[form_ids_raw]"
+								value="<?php echo esc_attr( implode( ', ', $wpf['form_ids'] ) ); ?>"
+								placeholder="Ej: 1, 3, 7  (vacío = todos)"
+								style="width:320px"
+							>
+							<p class="description">IDs de WPForms a sincronizar, separados por coma. Vacío = todos los formularios.</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
 		<!-- Section 5: Danger Zone                                          -->
 		<!-- ============================================================== -->
 		<div class="mrme-form-section mrme-form-section--card mrme-danger-zone">
