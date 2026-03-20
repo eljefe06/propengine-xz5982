@@ -1,3 +1,4 @@
 node_modules/
 package-lock.json
 .env.penpot
+.claude/skills/**/__pycache__/
