@@ -4,7 +4,7 @@ Tags: email marketing, newsletter, contacts, campaigns, automation
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,10 @@ This connection is made **only when a Pro license key is entered**. Free users a
 5. Settings page — mail provider configuration.
 
 == Changelog ==
+
+= 1.0.6 =
+* Fix: `stable_tag_mismatch` — plugin header Version and readme Stable Tag now match.
+* Fix: LogsPage.php — eliminate dynamic SQL concatenation of WHERE clause; use fully static query with conditional MySQL expressions to satisfy Plugin Check static analysis.
 
 = 1.0.5 =
 * Fix: Replace forbidden `move_uploaded_file()` with `wp_handle_upload()` in CSV import handler.

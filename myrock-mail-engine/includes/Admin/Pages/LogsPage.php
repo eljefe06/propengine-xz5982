@@ -38,56 +38,53 @@ class LogsPage {
 
         // Filters.
         $campaign_id  = isset( $_GET['campaign_id'] ) ? (int) $_GET['campaign_id'] : 0;
-        $status       = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
         $current_page = isset( $_GET['paged'] ) ? max( 1, (int) $_GET['paged'] ) : 1;
         $offset       = ( $current_page - 1 ) * self::PER_PAGE;
 
-        // Build WHERE clauses.
-        $where_clauses = [];
-        $placeholders  = [];
+        // Validate status against a fixed whitelist so it never carries user-controlled data.
+        $allowed_statuses = [ 'pending', 'sent', 'failed', 'bounced' ];
+        $raw_status       = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
+        $status           = in_array( $raw_status, $allowed_statuses, true ) ? $raw_status : '';
 
-        if ( $campaign_id > 0 ) {
-            $where_clauses[] = 'sl.campaign_id = %d';
-            $placeholders[]  = $campaign_id;
-        }
+        /*
+         * Use fully static SQL with conditional MySQL expressions instead of concatenating
+         * a dynamic WHERE clause. This avoids string interpolation of any user-derived variable
+         * and satisfies Plugin Check's static-analysis rules.
+         *
+         * Logic:
+         *   (0 = %d OR sl.campaign_id = %d)  — passes all rows when $campaign_id is 0
+         *   ('' = %s OR sl.status    = %s)   — passes all rows when $status is ''
+         */
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $total_items = (int) $wpdb->get_var(
+            $wpdb->prepare(
+                'SELECT COUNT(*) FROM %i sl
+                 WHERE (0 = %d OR sl.campaign_id = %d)
+                   AND (\'\'   = %s OR sl.status    = %s)',
+                $logs_table,
+                $campaign_id, $campaign_id,
+                $status, $status
+            )
+        );
 
-        if ( $status ) {
-            $where_clauses[] = 'sl.status = %s';
-            $placeholders[]  = $status;
-        }
-
-        $where_sql = $where_clauses ? 'WHERE ' . implode( ' AND ', $where_clauses ) : '';
-
-        // Use %i placeholder (WP 6.2+) for table names to satisfy WPCS DirectDB checks.
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-        $count_sql = 'SELECT COUNT(*) FROM %i sl ' . $where_sql;
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-        $list_sql  = 'SELECT sl.*, c.email AS contact_email, cam.title AS campaign_title
-                      FROM %i sl
-                      LEFT JOIN %i c ON c.id = sl.contact_id
-                      LEFT JOIN %i cam ON cam.id = sl.campaign_id
-                      ' . $where_sql . '
-                      ORDER BY sl.id DESC
-                      LIMIT %d OFFSET %d';
-
-        if ( $placeholders ) {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-            $total_items = (int) $wpdb->get_var( $wpdb->prepare( $count_sql, array_merge( [ $logs_table ], $placeholders ) ) );
-
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-            $logs = $wpdb->get_results(
-                $wpdb->prepare( $list_sql, array_merge( [ $logs_table, $contacts_table, $campaigns_table ], $placeholders, [ self::PER_PAGE, $offset ] ) ),
-                ARRAY_A
-            );
-        } else {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-            $total_items = (int) $wpdb->get_var( $wpdb->prepare( $count_sql, $logs_table ) );
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-            $logs = $wpdb->get_results(
-                $wpdb->prepare( $list_sql, $logs_table, $contacts_table, $campaigns_table, self::PER_PAGE, $offset ),
-                ARRAY_A
-            );
-        }
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $logs = $wpdb->get_results(
+            $wpdb->prepare(
+                'SELECT sl.*, c.email AS contact_email, cam.title AS campaign_title
+                 FROM %i sl
+                 LEFT JOIN %i c   ON c.id   = sl.contact_id
+                 LEFT JOIN %i cam ON cam.id = sl.campaign_id
+                 WHERE (0 = %d OR sl.campaign_id = %d)
+                   AND (\'\'   = %s OR sl.status    = %s)
+                 ORDER BY sl.id DESC
+                 LIMIT %d OFFSET %d',
+                $logs_table, $contacts_table, $campaigns_table,
+                $campaign_id, $campaign_id,
+                $status, $status,
+                self::PER_PAGE, $offset
+            ),
+            ARRAY_A
+        );
 
         if ( null === $logs ) {
             $logs = [];
