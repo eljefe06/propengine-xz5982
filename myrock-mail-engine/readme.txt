@@ -4,7 +4,7 @@ Tags: email marketing, newsletter, contacts, campaigns, automation
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.0
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,9 @@ This connection is made **only when a Pro license key is entered**. Free users a
 5. Settings page — mail provider configuration.
 
 == Changelog ==
+
+= 1.0.4 =
+* Fix: Plugin URI and Author URI were the same value — separated to comply with WordPress.org guidelines.
 
 = 1.0.3 =
 * Fix: Subscription form handler was registered on the wrong class (Shortcodes instead of FormHandler), causing a fatal error on form submit.
