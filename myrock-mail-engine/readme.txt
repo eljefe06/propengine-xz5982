@@ -4,7 +4,7 @@ Tags: email marketing, newsletter, contacts, campaigns, automation
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,9 @@ This connection is made **only when a Pro license key is entered**. Free users a
 5. Settings page — mail provider configuration.
 
 == Changelog ==
+
+= 1.0.7 =
+* Fix: Critical PHP TypeError in FormHandler — MailManager::send_raw() was called with an array as 4th argument instead of separate string params, causing a fatal error on subscription form submit with double opt-in.
 
 = 1.0.6 =
 * Fix: `stable_tag_mismatch` — plugin header Version and readme Stable Tag now match.

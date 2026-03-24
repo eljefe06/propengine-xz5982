@@ -189,10 +189,8 @@ class FormHandler {
 				$email,
 				$subject,
 				$body,
-				[
-					'from_name'  => $from_name,
-					'from_email' => $from_email,
-				]
+				$from_email,
+				$from_name
 			);
 		}
 
