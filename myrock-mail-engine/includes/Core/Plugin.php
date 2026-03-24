@@ -83,13 +83,12 @@ final class Plugin {
 
 	private function register_public(): void {
 		$public = new \MyRock\MailEngine\Public\Shortcodes();
-		$this->loader->add_action( 'init',                $public, 'register_shortcodes' );
-		$this->loader->add_action( 'wp_enqueue_scripts',  $public, 'enqueue_assets' );
-		$this->loader->add_action( 'admin_post_nopriv_mrme_subscribe', $public, 'handle_subscribe' );
-		$this->loader->add_action( 'admin_post_mrme_subscribe',        $public, 'handle_subscribe' );
+		$this->loader->add_action( 'init',               $public, 'register_shortcodes' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $public, 'enqueue_assets' );
 
-		// Unsubscribe page
 		$handler = new \MyRock\MailEngine\Public\FormHandler();
+		$this->loader->add_action( 'admin_post_nopriv_mrme_subscribe', $handler, 'handle_subscribe' );
+		$this->loader->add_action( 'admin_post_mrme_subscribe',        $handler, 'handle_subscribe' );
 		$this->loader->add_action( 'init', $handler, 'handle_unsubscribe' );
 		$this->loader->add_action( 'init', $handler, 'handle_confirm_optin' );
 	}
