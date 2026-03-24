@@ -98,21 +98,23 @@ class ContactsPage {
 
         $where_sql = $where_clauses ? 'WHERE ' . implode( ' AND ', $where_clauses ) : '';
 
-        $count_sql = "SELECT COUNT(*) FROM {$table} {$where_sql}";
-        $list_sql  = "SELECT * FROM {$table} {$where_sql} ORDER BY id DESC LIMIT %d OFFSET %d";
+        // Use %i placeholder (WP 6.2+) for the table name to satisfy WPCS DirectDB checks.
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        $count_sql = 'SELECT COUNT(*) FROM %i ' . $where_sql;
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        $list_sql  = 'SELECT * FROM %i ' . $where_sql . ' ORDER BY id DESC LIMIT %d OFFSET %d';
 
         if ( $placeholders ) {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-            $total_items = (int) $wpdb->get_var( $wpdb->prepare( $count_sql, $placeholders ) );
+            $total_items = (int) $wpdb->get_var( $wpdb->prepare( $count_sql, array_merge( [ $table ], $placeholders ) ) );
 
-            $list_placeholders   = array_merge( $placeholders, [ self::PER_PAGE, $offset ] );
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-            $contacts = $wpdb->get_results( $wpdb->prepare( $list_sql, $list_placeholders ), ARRAY_A );
+            $contacts = $wpdb->get_results( $wpdb->prepare( $list_sql, array_merge( [ $table ], $placeholders, [ self::PER_PAGE, $offset ] ) ), ARRAY_A );
         } else {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-            $total_items = (int) $wpdb->get_var( $count_sql );
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-            $contacts = $wpdb->get_results( $wpdb->prepare( $list_sql, self::PER_PAGE, $offset ), ARRAY_A );
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+            $total_items = (int) $wpdb->get_var( $wpdb->prepare( $count_sql, $table ) );
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+            $contacts = $wpdb->get_results( $wpdb->prepare( $list_sql, $table, self::PER_PAGE, $offset ), ARRAY_A );
         }
 
         if ( null === $contacts ) {
@@ -295,24 +297,32 @@ class ContactsPage {
             die();
         }
 
-        $file      = $_FILES['csv_file']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-        $mime_type = isset( $file['type'] ) ? sanitize_text_field( $file['type'] ) : '';
-        $file_name = isset( $file['name'] ) ? sanitize_file_name( $file['name'] ) : '';
+        // Use wp_handle_upload() — move_uploaded_file() is forbidden on WP.org.
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+
+        $overrides = [
+            'test_form' => false,
+            'mimes'     => [ 'csv' => 'text/csv' ],
+        ];
+
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $uploaded = wp_handle_upload( $_FILES['csv_file'], $overrides );
+
+        if ( isset( $uploaded['error'] ) ) {
+            wp_safe_redirect( add_query_arg( [ 'notice' => 'import_upload_failed', 'notice_type' => 'error' ], $redirect ) );
+            die();
+        }
+
+        $file_name = isset( $uploaded['file'] ) ? $uploaded['file'] : '';
         $extension = strtolower( pathinfo( $file_name, PATHINFO_EXTENSION ) );
 
         if ( 'csv' !== $extension ) {
+            wp_delete_file( $file_name );
             wp_safe_redirect( add_query_arg( [ 'notice' => 'import_invalid_type', 'notice_type' => 'error' ], $redirect ) );
             die();
         }
 
-        // Move file to tmp location.
-        $tmp_dir  = get_temp_dir();
-        $tmp_file = $tmp_dir . 'mrme-import-' . wp_generate_password( 8, false ) . '.csv';
-
-        if ( ! move_uploaded_file( $file['tmp_name'], $tmp_file ) ) {
-            wp_safe_redirect( add_query_arg( [ 'notice' => 'import_upload_failed', 'notice_type' => 'error' ], $redirect ) );
-            die();
-        }
+        $tmp_file = $file_name;
 
         $list_id = isset( $_POST['list_id'] ) ? (int) $_POST['list_id'] : 0;
 

@@ -1,10 +1,10 @@
 === MyRock Mail Engine ===
 Contributors: yanagui
 Tags: email marketing, newsletter, contacts, campaigns, automation
-Requires at least: 6.0
-Tested up to: 6.7
+Requires at least: 6.2
+Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,11 @@ This connection is made **only when a Pro license key is entered**. Free users a
 5. Settings page — mail provider configuration.
 
 == Changelog ==
+
+= 1.0.5 =
+* Fix: Replace forbidden `move_uploaded_file()` with `wp_handle_upload()` in CSV import handler.
+* Fix: Use `%i` identifier placeholder for table names in all direct DB queries (WP 6.2+).
+* Fix: `Tested up to` updated to 6.9; `Requires at least` bumped to 6.2 to match `%i` usage.
 
 = 1.0.4 =
 * Fix: Plugin URI and Author URI were the same value — separated to comply with WordPress.org guidelines.

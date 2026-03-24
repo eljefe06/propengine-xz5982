@@ -4,7 +4,7 @@
  * Plugin URI:        https://myrock.com.mx/plugin/
  * Description:       Email marketing y gestión de contactos profesional para WordPress. Standalone, portable y listo para escalar.
  * Version:           1.0.4
- * Requires at least: 6.0
+ * Requires at least: 6.2
  * Requires PHP:      8.0
  * Author:            MyRock
  * Author URI:        https://myrock.com.mx

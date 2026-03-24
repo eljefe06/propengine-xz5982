@@ -58,27 +58,35 @@ class LogsPage {
 
         $where_sql = $where_clauses ? 'WHERE ' . implode( ' AND ', $where_clauses ) : '';
 
-        $count_sql = "SELECT COUNT(*) FROM {$logs_table} sl {$where_sql}";
-        $list_sql  = "SELECT sl.*, c.email AS contact_email, cam.title AS campaign_title
-                      FROM {$logs_table} sl
-                      LEFT JOIN {$contacts_table} c ON c.id = sl.contact_id
-                      LEFT JOIN {$campaigns_table} cam ON cam.id = sl.campaign_id
-                      {$where_sql}
+        // Use %i placeholder (WP 6.2+) for table names to satisfy WPCS DirectDB checks.
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        $count_sql = 'SELECT COUNT(*) FROM %i sl ' . $where_sql;
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        $list_sql  = 'SELECT sl.*, c.email AS contact_email, cam.title AS campaign_title
+                      FROM %i sl
+                      LEFT JOIN %i c ON c.id = sl.contact_id
+                      LEFT JOIN %i cam ON cam.id = sl.campaign_id
+                      ' . $where_sql . '
                       ORDER BY sl.id DESC
-                      LIMIT %d OFFSET %d";
+                      LIMIT %d OFFSET %d';
 
         if ( $placeholders ) {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-            $total_items = (int) $wpdb->get_var( $wpdb->prepare( $count_sql, $placeholders ) );
+            $total_items = (int) $wpdb->get_var( $wpdb->prepare( $count_sql, array_merge( [ $logs_table ], $placeholders ) ) );
 
-            $list_placeholders = array_merge( $placeholders, [ self::PER_PAGE, $offset ] );
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
-            $logs = $wpdb->get_results( $wpdb->prepare( $list_sql, $list_placeholders ), ARRAY_A );
+            $logs = $wpdb->get_results(
+                $wpdb->prepare( $list_sql, array_merge( [ $logs_table, $contacts_table, $campaigns_table ], $placeholders, [ self::PER_PAGE, $offset ] ) ),
+                ARRAY_A
+            );
         } else {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-            $total_items = (int) $wpdb->get_var( $count_sql );
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-            $logs = $wpdb->get_results( $wpdb->prepare( $list_sql, self::PER_PAGE, $offset ), ARRAY_A );
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+            $total_items = (int) $wpdb->get_var( $wpdb->prepare( $count_sql, $logs_table ) );
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+            $logs = $wpdb->get_results(
+                $wpdb->prepare( $list_sql, $logs_table, $contacts_table, $campaigns_table, self::PER_PAGE, $offset ),
+                ARRAY_A
+            );
         }
 
         if ( null === $logs ) {

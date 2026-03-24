@@ -315,13 +315,14 @@ class Admin {
         $query   = '%' . $wpdb->esc_like( $query ) . '%';
         $table   = $wpdb->prefix . 'mrme_contacts';
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
         $results = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT id, email, first_name, last_name FROM {$table}
+                'SELECT id, email, first_name, last_name FROM %i
                  WHERE email LIKE %s OR first_name LIKE %s OR last_name LIKE %s
                  ORDER BY email ASC
-                 LIMIT 20",
+                 LIMIT 20',
+                $table,
                 $query,
                 $query,
                 $query
