@@ -63,6 +63,59 @@ class ContactService {
 	}
 
 	/**
+	 * Create a contact or update it if the email already exists.
+	 *
+	 * Unlike create(), this method updates the stored fields when the email
+	 * is already in the database instead of just syncing lists/tags.
+	 *
+	 * @param array $data Contact fields. Optional keys: list_ids (int[]), tag_ids (int[]).
+	 * @return int|false  Contact ID on success, false on failure.
+	 */
+	public static function create_or_update( array $data ): int|false {
+		if ( empty( $data['email'] ) || ! is_email( $data['email'] ) ) {
+			return false;
+		}
+
+		$email    = sanitize_email( $data['email'] );
+		$existing = Contact::find_by_email( $email );
+
+		if ( $existing ) {
+			$contact_id = (int) $existing['id'];
+			self::update( $contact_id, $data );
+			return $contact_id;
+		}
+
+		return self::create( $data );
+	}
+
+	/**
+	 * Generate a signed token for a contact by type.
+	 *
+	 * Supported types:
+	 *   'confirm_optin'  — double opt-in confirmation token
+	 *   'unsubscribe'    — one-click unsubscribe token (default)
+	 *
+	 * @param int    $contact_id
+	 * @param string $type  Token type identifier.
+	 * @return string  Base64-encoded token, or empty string if contact not found.
+	 */
+	public static function generate_token( int $contact_id, string $type ): string {
+		$contact = Contact::find( $contact_id );
+
+		if ( ! $contact ) {
+			return '';
+		}
+
+		$email = $contact['email'] ?? '';
+
+		if ( 'confirm_optin' === $type ) {
+			return self::build_confirm_token( $contact_id, $email );
+		}
+
+		return self::build_unsubscribe_token( $contact_id, $email );
+	}
+
+	/**
 	 * Create a new contact.
 	 *
 	 * @param array $data  Contact fields. Optional keys: list_ids (int[]), tag_ids (int[]).
